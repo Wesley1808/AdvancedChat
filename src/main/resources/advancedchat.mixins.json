@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.wesley1808.advancedchat.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MsgCommandMixin",
+    "PlayerListMixin",
+    "ServerPlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

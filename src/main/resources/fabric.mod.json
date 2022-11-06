@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "advancedchat",
+  "version": "${version}",
+  "name": "Advanced Chat",
+  "description": "A fabric mod that adds a bunch of useful multiplayer chat features to the game.",
+  "authors": [
+    "Wesley1808"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/advancedchat/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "me.wesley1808.advancedchat.common.AdvancedChat"
+    ]
+  },
+  "mixins": [
+    "advancedchat.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.10",
+    "minecraft": ">=1.19.2"
+  },
+  "suggests": {
+    "styledchat": "*"
+  }
+}
