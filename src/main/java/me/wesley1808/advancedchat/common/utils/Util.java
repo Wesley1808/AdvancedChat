@@ -46,7 +46,7 @@ public class Util {
         return profiles.iterator().next();
     }
 
-    public static Component addHoverText(MutableComponent component, ServerPlayer sender) {
+    public static MutableComponent addHoverText(MutableComponent component, ServerPlayer sender) {
         String hover = Config.instance().hoverText;
         if (hover.isEmpty()) return component;
 

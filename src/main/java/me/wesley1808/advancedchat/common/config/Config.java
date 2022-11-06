@@ -21,7 +21,7 @@ public class Config {
                     "staff",
                     "channel.staff",
                     true,
-                    "<dark_gray>[<aqua>Staff</aqua>] ",
+                    "<dark_gray>[<aqua>Staff</aqua>]</dark_gray> ",
                     "<dark_aqua>Chat Mode: <green>Staff",
                     null
             ),
@@ -29,7 +29,7 @@ public class Config {
                     "admin",
                     "channel.admin",
                     true,
-                    "<dark_gray>[<red>Admin</red>] ",
+                    "<dark_gray>[<red>Admin</red>]</dark_gray> ",
                     "<dark_aqua>Chat Mode: <green>Admin",
                     null
             ),
@@ -37,7 +37,7 @@ public class Config {
                     "local",
                     null,
                     false,
-                    "<dark_gray>[<aqua>Local</aqua>] ",
+                    "<dark_gray>[<aqua>Local</aqua>]</dark_gray> ",
                     "<dark_aqua>Chat Mode: <green>Local",
                     new CustomDistancePredicate(DistancePredicate.horizontal(MinMaxBounds.Doubles.between(0.0D, 256.0D)))
             ),
@@ -45,7 +45,7 @@ public class Config {
                     "world",
                     null,
                     false,
-                    "<dark_gray>[<aqua>%world:name%</aqua>] ",
+                    "<dark_gray>[<aqua>%world:name%</aqua>]</dark_gray> ",
                     "<dark_aqua>Chat Mode: <green>World",
                     new CustomDistancePredicate(new DistancePredicate(ANY, ANY, ANY, ANY, ANY))
             )
