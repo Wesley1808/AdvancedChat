@@ -4,7 +4,8 @@ import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.Placeholders;
 import eu.pb4.placeholders.api.TextParserUtils;
 import eu.pb4.predicate.api.MinecraftPredicate;
-import me.wesley1808.advancedchat.common.predicates.DistanceComparisonPredicate;
+import eu.pb4.predicate.api.PredicateContext;
+import me.wesley1808.advancedchat.common.predicates.AbstractChatPredicate;
 import me.wesley1808.advancedchat.common.utils.Permission;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +50,12 @@ public class ChatChannel {
             return false;
         }
 
-        return this.canSee == null || this.canSee.test(DistanceComparisonPredicate.createContext(sender, target)).success();
+        if (this.canSee == null) {
+            return true;
+        }
+
+        PredicateContext context = AbstractChatPredicate.createContext(sender, target);
+        return this.canSee.test(context).success();
     }
 
     public Component getPrefix(ServerPlayer sender) {

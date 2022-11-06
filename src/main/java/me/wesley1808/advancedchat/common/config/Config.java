@@ -1,7 +1,7 @@
 package me.wesley1808.advancedchat.common.config;
 
 import me.wesley1808.advancedchat.common.channels.ChatChannel;
-import me.wesley1808.advancedchat.common.predicates.DistanceComparisonPredicate;
+import me.wesley1808.advancedchat.common.predicates.CustomDistancePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 
@@ -39,7 +39,7 @@ public class Config {
                     false,
                     "<dark_gray>[<aqua>Local</aqua>] ",
                     "<dark_aqua>Chat Mode: <green>Local",
-                    new DistanceComparisonPredicate(DistancePredicate.horizontal(MinMaxBounds.Doubles.between(0.0D, 256.0D)))
+                    new CustomDistancePredicate(DistancePredicate.horizontal(MinMaxBounds.Doubles.between(0.0D, 256.0D)))
             ),
             new ChatChannel(
                     "world",
@@ -47,7 +47,7 @@ public class Config {
                     false,
                     "<dark_gray>[<aqua>%world:name%</aqua>] ",
                     "<dark_aqua>Chat Mode: <green>World",
-                    new DistanceComparisonPredicate(new DistancePredicate(ANY, ANY, ANY, ANY, ANY))
+                    new CustomDistancePredicate(new DistancePredicate(ANY, ANY, ANY, ANY, ANY))
             )
     };
 

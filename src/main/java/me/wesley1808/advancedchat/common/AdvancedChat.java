@@ -1,14 +1,14 @@
 package me.wesley1808.advancedchat.common;
 
 import com.mojang.logging.LogUtils;
-import eu.pb4.predicate.api.PredicateRegistry;
 import me.wesley1808.advancedchat.common.channels.Channels;
 import me.wesley1808.advancedchat.common.commands.AdvancedChatCommands;
 import me.wesley1808.advancedchat.common.commands.ChatCommand;
 import me.wesley1808.advancedchat.common.commands.IgnoreCommand;
 import me.wesley1808.advancedchat.common.config.ConfigManager;
 import me.wesley1808.advancedchat.common.data.DataManager;
-import me.wesley1808.advancedchat.common.predicates.DistanceComparisonPredicate;
+import me.wesley1808.advancedchat.common.predicates.Predicates;
+import me.wesley1808.advancedchat.common.utils.ModCompat;
 import me.wesley1808.advancedchat.common.utils.PlaceHolders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -23,7 +23,8 @@ public class AdvancedChat implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PredicateRegistry.register(DistanceComparisonPredicate.ID, DistanceComparisonPredicate.CODEC);
+        this.verifyStyledChat();
+        Predicates.register();
         ConfigManager.load();
         DataManager.initialize();
         PlaceHolders.register();
@@ -35,4 +36,17 @@ public class AdvancedChat implements ModInitializer {
             IgnoreCommand.register(dispatcher);
         });
     }
+
+    private void verifyStyledChat() {
+        if (!ModCompat.STYLED_CHAT) {
+            LOGGER.warn("|----------------------------------------------------------------|");
+            LOGGER.warn("| [AdvancedChat] StyledChat was not found.                       |");
+            LOGGER.warn("|                                                                |");
+            LOGGER.warn("| Some important features in this mod won't work without it.     |");
+            LOGGER.warn("|                                                                |");
+            LOGGER.warn("| You can download it here: https://modrinth.com/mod/styled-chat |");
+            LOGGER.warn("|----------------------------------------------------------------|");
+        }
+    }
+
 }
