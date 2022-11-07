@@ -5,10 +5,10 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.channels.Channels;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
+import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
@@ -45,7 +45,7 @@ public class ChatCommand {
         }
 
         player.sendSystemMessage(Formatter.parse(Config.instance().messages.switchedChannels.replace("${channel}", StringUtils.capitalize(name))));
-        AdvancedChatAPI.modifyData(player, (data) -> data.channel = channel);
+        DataManager.modify(player, (data) -> data.channel = channel);
         Util.resetActionBarPacket(player);
         return Command.SINGLE_SUCCESS;
     }

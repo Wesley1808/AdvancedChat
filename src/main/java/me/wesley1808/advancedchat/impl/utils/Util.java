@@ -1,5 +1,6 @@
 package me.wesley1808.advancedchat.impl.utils;
 
+import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -8,10 +9,10 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.drex.vanish.api.VanishAPI;
-import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
+import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
@@ -70,7 +71,7 @@ public class Util {
     public static Component getChannelPrefix(ServerPlayer player) {
         Component prefix = null;
 
-        AdvancedChatData data = AdvancedChatAPI.getData(player);
+        AdvancedChatData data = DataManager.get(player);
         if (!ChatChannel.isStaff(data.channel) && isVanished(player)) {
             prefix = Formatter.parse(Config.instance().selfPrefix);
         } else if (data.channel != null) {
@@ -85,9 +86,9 @@ public class Util {
     }
 
     public static List<ServerPlayer> filterByChannel(ServerPlayer sender, List<ServerPlayer> players) {
-        AdvancedChatData data = AdvancedChatAPI.getData(sender);
+        AdvancedChatData data = DataManager.get(sender);
         return !ChatChannel.isStaff(data.channel) && isVanished(sender)
-                ? List.of(sender)
+                ? Lists.newArrayList(sender)
                 : getPlayersIn(sender, data.channel, players);
     }
 
@@ -117,7 +118,7 @@ public class Util {
 
         ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
         for (ServerPlayer target : players) {
-            AdvancedChatData data = AdvancedChatAPI.getData(target);
+            AdvancedChatData data = DataManager.get(target);
             if (!data.ignored.contains(sender.getUUID())) {
                 filtered.add(target);
             }
@@ -137,10 +138,23 @@ public class Util {
     }
 
     public static boolean isVanished(Entity entity) {
-        if (ModCompat.VANISH) {
-            return VanishAPI.isVanished(entity);
+        return ModCompat.VANISH && VanishAPI.isVanished(entity);
+    }
+
+    public static boolean isPublicChat(ServerPlayer sender) {
+        return !isVanished(sender) && DataManager.get(sender).channel == null;
+    }
+
+    public static void throwIfIgnored(CommandSourceStack source, Collection<ServerPlayer> targets) throws CommandSyntaxException {
+        ServerPlayer sender = source.getPlayer();
+        if (sender != null && !Permission.check(source, Permission.BYPASS_IGNORE, 2)) {
+            for (ServerPlayer target : targets) {
+                AdvancedChatData data = DataManager.get(target);
+                if (data.ignored.contains(sender.getUUID())) {
+                    throw new SimpleCommandExceptionType(Formatter.parse(Config.instance().messages.ignored.replace("${player}", target.getScoreboardName()))).create();
+                }
+            }
         }
-        return false;
     }
 
     public static <T, R> List<R> map(Collection<T> collection, Function<T, R> function) {

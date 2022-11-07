@@ -1,35 +1,40 @@
 package me.wesley1808.advancedchat.api;
 
-import me.wesley1808.advancedchat.impl.channels.Channels;
-import me.wesley1808.advancedchat.impl.channels.ChatChannel;
-import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
-import me.wesley1808.advancedchat.impl.data.DataManager;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.wesley1808.advancedchat.impl.utils.Util;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
+import java.util.Collection;
 
+@SuppressWarnings("unused")
 public class AdvancedChatAPI {
 
-    @Nullable
-    public static ChatChannel getChannel(String name) {
-        return Channels.get(name);
-    }
-
-    @NotNull
+    /**
+     * Returns the prefix of the channel the player is currently in.
+     * <p>
+     * If the player is not in a channel, it will return an empty text component.
+     */
     public static Component getChannelPrefix(ServerPlayer player) {
         return Util.getChannelPrefix(player);
     }
 
-    @NotNull
-    public static AdvancedChatData getData(ServerPlayer player) {
-        return DataManager.get(player);
+    /**
+     * Hook for other mods to check if a message sent by the specified player is actually sent globally.
+     * <p>
+     * Minecraft-Discord bridges can use this check to prevent (private) channel messages from being sent to a public discord channel.
+     */
+    public static boolean isPublicChat(ServerPlayer player) {
+        return Util.isPublicChat(player);
     }
 
-    public static void modifyData(ServerPlayer player, Consumer<AdvancedChatData> consumer) {
-        DataManager.modify(player, consumer);
+    /**
+     * Verifies that the command source isn't ignored by any of the targets.
+     *
+     * @throws CommandSyntaxException: If the command source is ignored by any of the targets.
+     */
+    public static void throwIfIgnored(CommandSourceStack source, Collection<ServerPlayer> targets) throws CommandSyntaxException {
+        Util.throwIfIgnored(source, targets);
     }
 }

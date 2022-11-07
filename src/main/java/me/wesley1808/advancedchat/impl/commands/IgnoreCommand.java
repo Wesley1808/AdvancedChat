@@ -4,9 +4,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
+import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
@@ -40,7 +40,7 @@ public class IgnoreCommand {
             return 0;
         }
 
-        AdvancedChatAPI.modifyData(source, (data) -> {
+        DataManager.modify(source, (data) -> {
             if (ignore) {
                 if (data.ignore(target.getId())) {
                     sendMessage(source, messages.ignoredPlayer, target);
@@ -68,7 +68,7 @@ public class IgnoreCommand {
     private static SuggestionProvider<CommandSourceStack> ignoredPlayers() {
         return (ctx, builder) -> {
             CommandSourceStack source = ctx.getSource();
-            AdvancedChatData data = AdvancedChatAPI.getData(source.getPlayerOrException());
+            AdvancedChatData data = DataManager.get(source.getPlayerOrException());
             return Util.suggest(builder, Util.map(data.ignored,
                     (uuid) -> source.getServer().getProfileCache().get(uuid).map(GameProfile::getName).orElse(null)
             ));

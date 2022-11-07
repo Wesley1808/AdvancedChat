@@ -1,9 +1,9 @@
 package me.wesley1808.advancedchat.mixins;
 
 import com.mojang.authlib.GameProfile;
-import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
+import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.core.BlockPos;
@@ -39,15 +39,10 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         this.resetActionBarPacket();
     }
 
-    @Inject(method = "setLevel", at = @At(value = "TAIL"))
-    private void advancedchat$onSetLevel(ServerLevel serverLevel, CallbackInfo ci) {
-        this.resetActionBarPacket();
-    }
-
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void advancedchat$onTick(CallbackInfo ci) {
         if (Config.instance().actionbar) {
-            if (this.tickCount % 200 == 0) {
+            if (this.tickCount % 40 == 0) {
                 this.resetActionBarPacket();
             }
 
@@ -60,7 +55,7 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     @Override
     public void resetActionBarPacket() {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        AdvancedChatData data = AdvancedChatAPI.getData(player);
+        AdvancedChatData data = DataManager.get(player);
         if (Util.isVanished(player) || data.channel == null) {
             this.actionBarPacket = null;
             return;

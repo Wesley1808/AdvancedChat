@@ -12,6 +12,7 @@ import me.wesley1808.advancedchat.impl.predicates.Predicates;
 import me.wesley1808.advancedchat.impl.utils.PlaceHolders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.slf4j.Logger;
 
 public class AdvancedChat implements ModInitializer {
@@ -25,10 +26,13 @@ public class AdvancedChat implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("[AdvancedChat] Initializing...");
         Predicates.register();
-        ConfigManager.load();
         DataManager.initialize();
         PlaceHolders.register();
-        Channels.register();
+
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            ConfigManager.load();
+            Channels.register();
+        });
 
         CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
             AdvancedChatCommands.register(dispatcher);

@@ -11,9 +11,9 @@ public class Config {
     protected static Config instance = new Config();
 
     public boolean actionbar = true;
-    public String hoverText = "<dark_aqua>Receivers: <dark_gray>[${receivers}]";
+    public String hoverText = "<dark_aqua>Receivers: <dark_gray>[${receivers}]</dark_gray>";
     public String receiver = "<green>${player}</green>";
-    public String selfPrefix = "<dark_gray>[<aqua>Self</aqua>]";
+    public String selfPrefix = "<dark_gray>[<aqua>Self</aqua>]</dark_gray> ";
     public Messages messages = new Messages();
     public Socialspy socialSpy = new Socialspy();
 

@@ -2,8 +2,8 @@ package me.wesley1808.advancedchat.impl.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.config.Config;
+import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Permission;
 import net.minecraft.commands.CommandSourceStack;
@@ -23,7 +23,7 @@ public class SocialspyCommand {
     private static int execute(ServerPlayer player) {
         Config.Messages messages = Config.instance().messages;
 
-        AdvancedChatAPI.modifyData(player, (data) -> {
+        DataManager.modify(player, (data) -> {
             data.socialSpy = !data.socialSpy;
             if (data.socialSpy) {
                 player.sendSystemMessage(Formatter.parse(messages.socialSpyEnabled));
