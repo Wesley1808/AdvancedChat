@@ -11,6 +11,7 @@ public class Config {
     protected static Config instance = new Config();
 
     public boolean actionbar = true;
+    public boolean alwaysTriggerMessageEvent = false;
     public String hoverText = "<dark_aqua>Receivers: <dark_gray>[${receivers}]</dark_gray>";
     public String receiver = "<green>${player}</green>";
     public String selfPrefix = "<dark_gray>[<aqua>Self</aqua>]</dark_gray> ";
@@ -47,7 +48,7 @@ public class Config {
                     null,
                     false,
                     "<dark_gray>[<aqua>%world:name%</aqua>]</dark_gray> ",
-                    "<dark_aqua>Chat Mode: <green>World",
+                    "<dark_aqua>Chat Mode: <green>%world:name%",
                     new CustomDistancePredicate(new DistancePredicate(ANY, ANY, ANY, ANY, ANY))
             )
     };
