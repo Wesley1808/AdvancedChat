@@ -1,5 +1,6 @@
 package me.wesley1808.advancedchat.api;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.MapCodec;
 import eu.pb4.predicate.api.AbstractPredicate;
 import eu.pb4.predicate.api.MinecraftPredicate;
@@ -15,13 +16,17 @@ public abstract class AbstractChatPredicate extends AbstractPredicate {
     }
 
     public static PredicateContext createContext(ServerPlayer sender, ServerPlayer target) {
-        return new PredicateContext(sender.getServer(), sender.createCommandSourceStack(), sender.getLevel(), sender, target, sender.getGameProfile());
+        // Stores the sender in the game profile, as it isn't really used anywhere else.
+        // For everything else we want to be testing against the target.
+        return new PredicateContext(target.server, target.createCommandSourceStack(), target.getLevel(), target, target, sender.getGameProfile());
     }
 
     @Override
     public final PredicateResult<?> test(PredicateContext context) {
-        ServerPlayer sender = context.player();
-        if (sender == null || !(context.entity() instanceof ServerPlayer target)) {
+        GameProfile profile = context.gameProfile();
+        ServerPlayer target = context.player();
+        ServerPlayer sender;
+        if (target == null || profile == null || (sender = context.server().getPlayerList().getPlayer(profile.getId())) == null) {
             return PredicateResult.ofFailure();
         }
 
