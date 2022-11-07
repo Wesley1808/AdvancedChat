@@ -21,7 +21,7 @@ public class AdvancedChatCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("advancedchat");
         builder.then(literal("reload")
-                .requires(Permission.require("command.reload", 2))
+                .requires(Permission.require(Permission.RELOAD, 2))
                 .executes(ctx -> reload(ctx.getSource())));
 
         dispatcher.register(builder);

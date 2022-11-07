@@ -2,10 +2,9 @@ package me.wesley1808.advancedchat.impl.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import eu.pb4.placeholders.api.TextParserUtils;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.config.Config;
-import me.wesley1808.advancedchat.impl.data.DataManager;
+import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Permission;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +15,7 @@ public class SocialspyCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("socialspy")
-                .requires(Permission.require("command.socialspy", 2))
+                .requires(Permission.require(Permission.SOCIALSPY, 2))
                 .executes(context -> execute(context.getSource().getPlayerOrException()))
         );
     }
@@ -27,9 +26,9 @@ public class SocialspyCommand {
         AdvancedChatAPI.modifyData(player, (data) -> {
             data.socialSpy = !data.socialSpy;
             if (data.socialSpy) {
-                player.sendSystemMessage(TextParserUtils.formatTextSafe(messages.socialSpyEnabled));
+                player.sendSystemMessage(Formatter.parse(messages.socialSpyEnabled));
             } else {
-                player.sendSystemMessage(TextParserUtils.formatTextSafe(messages.socialSpyDisabled));
+                player.sendSystemMessage(Formatter.parse(messages.socialSpyDisabled));
             }
         });
 

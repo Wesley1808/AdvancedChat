@@ -8,20 +8,24 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.function.Predicate;
 
 public class Permission {
+    private static final String BASE = "advancedchat.";
+    public static final String BYPASS_IGNORE = permission("bypass.ignore");
+    public static final String SOCIALSPY = permission("command.socialspy");
+    public static final String RELOAD = permission("command.reload");
 
     public static boolean check(SharedSuggestionProvider source, String perm, int level) {
-        return Permissions.check(source, permission(perm), level);
+        return Permissions.check(source, perm, level);
     }
 
-    public static boolean check(ServerPlayer target, String perm, int level) {
-        return check(target.createCommandSourceStack(), perm, level);
+    public static boolean check(ServerPlayer source, String perm, int level) {
+        return Permissions.check(source, perm, level);
     }
 
     public static Predicate<CommandSourceStack> require(String perm, int level) {
-        return source -> check(source, perm, level);
+        return Permissions.require(perm, level);
     }
 
     private static String permission(String perm) {
-        return "advancedchat." + perm;
+        return BASE + perm;
     }
 }

@@ -2,10 +2,10 @@ package me.wesley1808.advancedchat.mixins;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import eu.pb4.placeholders.api.TextParserUtils;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
+import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Permission;
 import me.wesley1808.advancedchat.impl.utils.Socialspy;
 import net.minecraft.commands.CommandSourceStack;
@@ -29,11 +29,11 @@ public class MsgCommandMixin {
     @Inject(method = "sendMessage", at = @At(value = "HEAD"))
     private static void advancedchat$verifyNotIgnored(CommandSourceStack source, Collection<ServerPlayer> targets, PlayerChatMessage playerChatMessage, CallbackInfo ci) throws CommandSyntaxException {
         ServerPlayer sender = source.getPlayer();
-        if (sender != null && !Permission.check(source, "bypass.ignore", 2)) {
+        if (sender != null && !Permission.check(source, Permission.BYPASS_IGNORE, 2)) {
             for (ServerPlayer target : targets) {
                 AdvancedChatData data = AdvancedChatAPI.getData(target);
                 if (data.ignored.contains(sender.getUUID())) {
-                    throw new SimpleCommandExceptionType(TextParserUtils.formatTextSafe(Config.instance().messages.ignored.replace("${player}", target.getScoreboardName()))).create();
+                    throw new SimpleCommandExceptionType(Formatter.parse(Config.instance().messages.ignored.replace("${player}", target.getScoreboardName()))).create();
                 }
             }
         }

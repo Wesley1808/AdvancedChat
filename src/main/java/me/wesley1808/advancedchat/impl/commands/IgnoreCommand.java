@@ -4,10 +4,10 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import eu.pb4.placeholders.api.TextParserUtils;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
+import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,7 +36,7 @@ public class IgnoreCommand {
     private static int execute(ServerPlayer source, GameProfile target, boolean ignore) {
         Config.Messages messages = Config.instance().messages;
         if (ignore && source.getUUID().equals(target.getId())) {
-            source.sendSystemMessage(TextParserUtils.formatTextSafe(messages.cannotIgnoreSelf));
+            source.sendSystemMessage(Formatter.parse(messages.cannotIgnoreSelf));
             return 0;
         }
 
@@ -60,7 +60,7 @@ public class IgnoreCommand {
     }
 
     private static void sendMessage(ServerPlayer source, String text, GameProfile target) {
-        source.sendSystemMessage(TextParserUtils.formatTextSafe(
+        source.sendSystemMessage(Formatter.parse(
                 text.replace("${player}", target.getName())
         ));
     }

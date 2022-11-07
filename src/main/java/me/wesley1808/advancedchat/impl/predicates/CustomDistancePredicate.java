@@ -13,13 +13,15 @@ import net.minecraft.world.phys.Vec3;
 
 public class CustomDistancePredicate extends AbstractChatPredicate {
     public static final ResourceLocation ID = new ResourceLocation("advancedchat", "distance");
-    public CustomDistancePredicate(DistancePredicate predicate) {
-        super(ID, CODEC);
-        this.predicate = predicate;
-    }    public static final MapCodec<CustomDistancePredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+    public static final MapCodec<CustomDistancePredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(DistancePredicateCodec.INSTANCE.fieldOf("value").forGetter((inst) -> inst.predicate))
             .apply(instance, CustomDistancePredicate::new)
     );
+
+    public CustomDistancePredicate(DistancePredicate predicate) {
+        super(ID, CODEC);
+        this.predicate = predicate;
+    }
 
     private final DistancePredicate predicate;
 

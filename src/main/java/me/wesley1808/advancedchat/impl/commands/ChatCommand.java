@@ -4,12 +4,12 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import eu.pb4.placeholders.api.TextParserUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.channels.Channels;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
+import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,11 +40,11 @@ public class ChatCommand {
     private static int execute(ServerPlayer player, String name, boolean isGlobal) {
         ChatChannel channel = isGlobal ? null : Channels.get(name);
         if (!isGlobal && (channel == null || !channel.canPlayerUse(player))) {
-            player.sendSystemMessage(TextParserUtils.formatTextSafe(Config.instance().messages.channelNotFound.replace("${name}", name)));
+            player.sendSystemMessage(Formatter.parse(Config.instance().messages.channelNotFound.replace("${name}", name)));
             return 0;
         }
 
-        player.sendSystemMessage(TextParserUtils.formatText(Config.instance().messages.switchedChannels.replace("${channel}", StringUtils.capitalize(name))));
+        player.sendSystemMessage(Formatter.parse(Config.instance().messages.switchedChannels.replace("${channel}", StringUtils.capitalize(name))));
         AdvancedChatAPI.modifyData(player, (data) -> data.channel = channel);
         Util.resetActionBarPacket(player);
         return Command.SINGLE_SUCCESS;

@@ -6,7 +6,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import eu.pb4.placeholders.api.TextParserUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.drex.vanish.api.VanishAPI;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
@@ -64,7 +63,7 @@ public class Util {
 
         return component.withStyle(style -> style.withHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
-                TextParserUtils.formatTextSafe(hover.replace("${receivers}", receivers))
+                Formatter.parse(hover.replace("${receivers}", receivers))
         )));
     }
 
@@ -73,7 +72,7 @@ public class Util {
 
         AdvancedChatData data = AdvancedChatAPI.getData(player);
         if (!ChatChannel.isStaff(data.channel) && isVanished(player)) {
-            prefix = TextParserUtils.formatTextSafe(Config.instance().selfPrefix);
+            prefix = Formatter.parse(Config.instance().selfPrefix);
         } else if (data.channel != null) {
             prefix = data.channel.getPrefix(player);
         }
@@ -112,7 +111,7 @@ public class Util {
     }
 
     public static List<ServerPlayer> filterIgnored(ServerPlayer sender, Collection<ServerPlayer> players) {
-        if (Permission.check(sender, "bypass.ignore", 2)) {
+        if (Permission.check(sender, Permission.BYPASS_IGNORE, 2)) {
             return new ObjectArrayList<>(players);
         }
 

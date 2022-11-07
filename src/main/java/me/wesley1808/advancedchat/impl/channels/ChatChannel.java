@@ -2,10 +2,10 @@ package me.wesley1808.advancedchat.impl.channels;
 
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.Placeholders;
-import eu.pb4.placeholders.api.TextParserUtils;
 import eu.pb4.predicate.api.MinecraftPredicate;
 import eu.pb4.predicate.api.PredicateContext;
 import me.wesley1808.advancedchat.api.AbstractChatPredicate;
+import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Permission;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,7 +65,7 @@ public class ChatChannel {
         }
 
         return Placeholders.parseText(
-                TextParserUtils.formatNodesSafe(this.prefix),
+                Formatter.parseNodes(this.prefix),
                 PlaceholderContext.of(sender)
         );
     }
@@ -77,7 +77,7 @@ public class ChatChannel {
         }
 
         return Placeholders.parseText(
-                TextParserUtils.formatNodesSafe(this.actionbar),
+                Formatter.parseNodes(this.actionbar),
                 PlaceholderContext.of(sender)
         );
     }
