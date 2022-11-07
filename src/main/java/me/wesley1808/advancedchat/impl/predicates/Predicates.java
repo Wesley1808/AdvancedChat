@@ -1,4 +1,4 @@
-package me.wesley1808.advancedchat.common.predicates;
+package me.wesley1808.advancedchat.impl.predicates;
 
 import eu.pb4.predicate.api.PredicateRegistry;
 

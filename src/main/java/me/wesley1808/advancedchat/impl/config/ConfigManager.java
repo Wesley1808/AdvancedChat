@@ -1,8 +1,8 @@
-package me.wesley1808.advancedchat.common.config;
+package me.wesley1808.advancedchat.impl.config;
 
-import me.wesley1808.advancedchat.common.AdvancedChat;
-import me.wesley1808.advancedchat.common.channels.ChatChannel;
-import me.wesley1808.advancedchat.common.data.Json;
+import me.wesley1808.advancedchat.impl.AdvancedChat;
+import me.wesley1808.advancedchat.impl.channels.ChatChannel;
+import me.wesley1808.advancedchat.impl.data.Json;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.*;

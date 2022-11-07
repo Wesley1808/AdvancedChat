@@ -1,4 +1,4 @@
-package me.wesley1808.advancedchat.common.utils;
+package me.wesley1808.advancedchat.impl.utils;
 
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;

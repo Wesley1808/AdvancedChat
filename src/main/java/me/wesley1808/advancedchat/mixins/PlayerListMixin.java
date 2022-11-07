@@ -1,7 +1,7 @@
 package me.wesley1808.advancedchat.mixins;
 
-import me.wesley1808.advancedchat.common.api.AdvancedChatEvents;
-import me.wesley1808.advancedchat.common.utils.Util;
+import me.wesley1808.advancedchat.impl.utils.Socialspy;
+import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.MinecraftServer;
@@ -37,7 +37,7 @@ public class PlayerListMixin {
         List<ServerPlayer> players = sender != null ? Util.filterIgnored(sender) : this.players;
         if (sender != null && Util.isChat(this.server, bound.chatType())) {
             List<ServerPlayer> receivers = Util.filterByChannel(sender, players);
-            AdvancedChatEvents.CHANNEL_MESSAGE_EVENT.invoker().onSentMessage(sender, receivers, message);
+            Socialspy.send(sender, receivers, message);
             return receivers;
         }
 

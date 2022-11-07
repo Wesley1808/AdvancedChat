@@ -1,7 +1,7 @@
-package me.wesley1808.advancedchat.common.config;
+package me.wesley1808.advancedchat.impl.config;
 
-import me.wesley1808.advancedchat.common.channels.ChatChannel;
-import me.wesley1808.advancedchat.common.predicates.CustomDistancePredicate;
+import me.wesley1808.advancedchat.impl.channels.ChatChannel;
+import me.wesley1808.advancedchat.impl.predicates.CustomDistancePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 
@@ -15,6 +15,7 @@ public class Config {
     public String receiver = "<green>${player}</green>";
     public String selfPrefix = "<dark_gray>[<aqua>Self</aqua>]";
     public Messages messages = new Messages();
+    public Socialspy socialSpy = new Socialspy();
 
     public ChatChannel[] channels = {
             new ChatChannel(
@@ -55,6 +56,13 @@ public class Config {
         return instance;
     }
 
+    public static class Socialspy {
+        public boolean logPrivateMessages = false;
+        public String prefix = "<dark_gray>[<aqua>Spy</aqua>]</dark_gray> ";
+        public String privateMessage = "<dark_gray>[</dark_gray>${source} <gray>→</gray> ${target}<dark_gray>]</dark_gray> <gray>${message}";
+        public String channelMessage = "${channel}${sender} <dark_gray>»</dark_gray> ${message}";
+    }
+
     public static class Messages {
         public String switchedChannels = "<dark_aqua>Chat Mode -> <green>${channel}";
         public String ignored = "<red>${player} is ignoring you.";
@@ -64,5 +72,7 @@ public class Config {
         public String alreadyIgnored = "<red>You are already ignoring ${player}!";
         public String notAlreadyIgnored = "<red>You aren't ignoring ${player}!";
         public String channelNotFound = "<red>Unable to find a channel with name '${name}'!";
+        public String socialSpyEnabled = "<green>Enabled Socialspy!";
+        public String socialSpyDisabled = "<red>Disabled Socialspy!";
     }
 }

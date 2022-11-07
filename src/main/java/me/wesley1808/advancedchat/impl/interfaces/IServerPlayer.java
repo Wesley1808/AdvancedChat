@@ -1,4 +1,4 @@
-package me.wesley1808.advancedchat.common.interfaces;
+package me.wesley1808.advancedchat.impl.interfaces;
 
 public interface IServerPlayer {
 

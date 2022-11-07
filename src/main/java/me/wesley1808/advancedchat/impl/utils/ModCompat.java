@@ -1,4 +1,4 @@
-package me.wesley1808.advancedchat.common.utils;
+package me.wesley1808.advancedchat.impl.utils;
 
 import net.fabricmc.loader.api.FabricLoader;
 

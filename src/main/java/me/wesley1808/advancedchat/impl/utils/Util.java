@@ -1,4 +1,4 @@
-package me.wesley1808.advancedchat.common.utils;
+package me.wesley1808.advancedchat.impl.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
@@ -9,11 +9,11 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import eu.pb4.placeholders.api.TextParserUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.drex.vanish.api.VanishAPI;
-import me.wesley1808.advancedchat.common.channels.ChatChannel;
-import me.wesley1808.advancedchat.common.config.Config;
-import me.wesley1808.advancedchat.common.data.AdvancedChatData;
-import me.wesley1808.advancedchat.common.data.DataManager;
-import me.wesley1808.advancedchat.common.interfaces.IServerPlayer;
+import me.wesley1808.advancedchat.api.AdvancedChatAPI;
+import me.wesley1808.advancedchat.impl.channels.ChatChannel;
+import me.wesley1808.advancedchat.impl.config.Config;
+import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
+import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.core.Registry;
@@ -68,18 +68,17 @@ public class Util {
         )));
     }
 
-    @Nullable
     public static Component getChannelPrefix(ServerPlayer player) {
         Component prefix = null;
 
-        AdvancedChatData data = DataManager.get(player);
-        if (ChatChannel.notStaff(data.channel) && isVanished(player)) {
+        AdvancedChatData data = AdvancedChatAPI.getData(player);
+        if (!ChatChannel.isStaff(data.channel) && isVanished(player)) {
             prefix = TextParserUtils.formatTextSafe(Config.instance().selfPrefix);
         } else if (data.channel != null) {
             prefix = data.channel.getPrefix(player);
         }
 
-        return prefix;
+        return prefix == null ? Component.empty() : Util.addHoverText((MutableComponent) prefix, player);
     }
 
     public static List<ServerPlayer> filterByChannel(ServerPlayer sender) {
@@ -87,8 +86,8 @@ public class Util {
     }
 
     public static List<ServerPlayer> filterByChannel(ServerPlayer sender, List<ServerPlayer> players) {
-        AdvancedChatData data = DataManager.get(sender);
-        return ChatChannel.notStaff(data.channel) && isVanished(sender)
+        AdvancedChatData data = AdvancedChatAPI.getData(sender);
+        return !ChatChannel.isStaff(data.channel) && isVanished(sender)
                 ? List.of(sender)
                 : getPlayersIn(sender, data.channel, players);
     }
@@ -113,13 +112,13 @@ public class Util {
     }
 
     public static List<ServerPlayer> filterIgnored(ServerPlayer sender, Collection<ServerPlayer> players) {
-        if (Permission.check(sender, "ignore.bypass", 2)) {
+        if (Permission.check(sender, "bypass.ignore", 2)) {
             return new ObjectArrayList<>(players);
         }
 
         ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
         for (ServerPlayer target : players) {
-            AdvancedChatData data = DataManager.get(target);
+            AdvancedChatData data = AdvancedChatAPI.getData(target);
             if (!data.ignored.contains(sender.getUUID())) {
                 filtered.add(target);
             }

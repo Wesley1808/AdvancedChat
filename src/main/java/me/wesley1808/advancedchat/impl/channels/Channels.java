@@ -1,7 +1,7 @@
-package me.wesley1808.advancedchat.common.channels;
+package me.wesley1808.advancedchat.impl.channels;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import me.wesley1808.advancedchat.common.config.Config;
+import me.wesley1808.advancedchat.impl.config.Config;
 
 public class Channels {
     private static final Object2ObjectOpenHashMap<String, ChatChannel> CHANNELS = new Object2ObjectOpenHashMap<>();

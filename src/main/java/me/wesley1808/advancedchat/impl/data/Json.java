@@ -1,10 +1,10 @@
-package me.wesley1808.advancedchat.common.data;
+package me.wesley1808.advancedchat.impl.data;
 
 import com.google.gson.*;
 import eu.pb4.predicate.api.GsonPredicateSerializer;
 import eu.pb4.predicate.api.MinecraftPredicate;
-import me.wesley1808.advancedchat.common.channels.Channels;
-import me.wesley1808.advancedchat.common.channels.ChatChannel;
+import me.wesley1808.advancedchat.impl.channels.Channels;
+import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 
 import java.lang.reflect.Type;
 

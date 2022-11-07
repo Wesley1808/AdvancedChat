@@ -1,14 +1,14 @@
-package me.wesley1808.advancedchat.common.commands;
+package me.wesley1808.advancedchat.impl.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import me.wesley1808.advancedchat.common.channels.Channels;
-import me.wesley1808.advancedchat.common.channels.ChatChannel;
-import me.wesley1808.advancedchat.common.config.ConfigManager;
-import me.wesley1808.advancedchat.common.data.DataManager;
-import me.wesley1808.advancedchat.common.utils.Permission;
-import me.wesley1808.advancedchat.common.utils.Util;
+import me.wesley1808.advancedchat.api.AdvancedChatAPI;
+import me.wesley1808.advancedchat.impl.channels.Channels;
+import me.wesley1808.advancedchat.impl.channels.ChatChannel;
+import me.wesley1808.advancedchat.impl.config.ConfigManager;
+import me.wesley1808.advancedchat.impl.utils.Permission;
+import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -32,7 +32,7 @@ public class AdvancedChatCommands {
         Channels.register();
 
         for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
-            DataManager.modify(player, (data) -> {
+            AdvancedChatAPI.modifyData(player, (data) -> {
                 String prevName = data.channel != null ? data.channel.name : null;
                 ChatChannel channel = Channels.get(prevName);
                 if (channel != null && channel.canPlayerUse(player)) {

@@ -1,4 +1,4 @@
-package me.wesley1808.advancedchat.common.commands;
+package me.wesley1808.advancedchat.impl.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -6,11 +6,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import eu.pb4.placeholders.api.TextParserUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import me.wesley1808.advancedchat.common.channels.Channels;
-import me.wesley1808.advancedchat.common.channels.ChatChannel;
-import me.wesley1808.advancedchat.common.config.Config;
-import me.wesley1808.advancedchat.common.data.DataManager;
-import me.wesley1808.advancedchat.common.utils.Util;
+import me.wesley1808.advancedchat.api.AdvancedChatAPI;
+import me.wesley1808.advancedchat.impl.channels.Channels;
+import me.wesley1808.advancedchat.impl.channels.ChatChannel;
+import me.wesley1808.advancedchat.impl.config.Config;
+import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +45,7 @@ public class ChatCommand {
         }
 
         player.sendSystemMessage(TextParserUtils.formatText(Config.instance().messages.switchedChannels.replace("${channel}", StringUtils.capitalize(name))));
-        DataManager.modify(player, (data) -> data.channel = channel);
+        AdvancedChatAPI.modifyData(player, (data) -> data.channel = channel);
         Util.resetActionBarPacket(player);
         return Command.SINGLE_SUCCESS;
     }

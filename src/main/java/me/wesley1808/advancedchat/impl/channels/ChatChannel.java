@@ -1,12 +1,12 @@
-package me.wesley1808.advancedchat.common.channels;
+package me.wesley1808.advancedchat.impl.channels;
 
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.Placeholders;
 import eu.pb4.placeholders.api.TextParserUtils;
 import eu.pb4.predicate.api.MinecraftPredicate;
 import eu.pb4.predicate.api.PredicateContext;
-import me.wesley1808.advancedchat.common.predicates.AbstractChatPredicate;
-import me.wesley1808.advancedchat.common.utils.Permission;
+import me.wesley1808.advancedchat.api.AbstractChatPredicate;
+import me.wesley1808.advancedchat.impl.utils.Permission;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +29,8 @@ public class ChatChannel {
         this.canSee = canSee;
     }
 
-    public static boolean notStaff(ChatChannel channel) {
-        return channel == null || !channel.isStaff;
+    public static boolean isStaff(ChatChannel channel) {
+        return channel != null && channel.isStaff;
     }
 
     public boolean canPlayerUse(ServerPlayer player) {
@@ -58,7 +58,12 @@ public class ChatChannel {
         return this.canSee.test(context).success();
     }
 
+    @Nullable
     public Component getPrefix(ServerPlayer sender) {
+        if (this.prefix == null || this.prefix.isEmpty()) {
+            return null;
+        }
+
         return Placeholders.parseText(
                 TextParserUtils.formatNodesSafe(this.prefix),
                 PlaceholderContext.of(sender)

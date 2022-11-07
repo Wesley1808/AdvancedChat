@@ -1,4 +1,4 @@
-package me.wesley1808.advancedchat.common.data;
+package me.wesley1808.advancedchat.impl.data;
 
 import eu.pb4.playerdata.api.PlayerDataApi;
 import eu.pb4.playerdata.api.storage.JsonDataStorage;

@@ -1,7 +1,7 @@
-package me.wesley1808.advancedchat.common.data;
+package me.wesley1808.advancedchat.impl.data;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import me.wesley1808.advancedchat.common.channels.ChatChannel;
+import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,9 @@ public class AdvancedChatData {
     public Set<UUID> ignored = new ObjectOpenHashSet<>();
 
     @Nullable
-    public ChatChannel channel;
+    public ChatChannel channel = null;
+
+    public boolean socialSpy = false;
 
     public boolean unignore(UUID uuid) {
         return this.ignored.remove(uuid);

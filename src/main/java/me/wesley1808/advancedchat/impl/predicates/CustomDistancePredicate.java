@@ -1,10 +1,11 @@
-package me.wesley1808.advancedchat.common.predicates;
+package me.wesley1808.advancedchat.impl.predicates;
 
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.predicate.api.PredicateResult;
+import me.wesley1808.advancedchat.api.AbstractChatPredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

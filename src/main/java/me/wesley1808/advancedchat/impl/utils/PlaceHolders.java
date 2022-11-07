@@ -1,10 +1,9 @@
-package me.wesley1808.advancedchat.common.utils;
+package me.wesley1808.advancedchat.impl.utils;
 
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -16,8 +15,7 @@ public class PlaceHolders {
             ServerPlayer sender = ctx.player();
 
             if (sender != null) {
-                Component component = Util.getChannelPrefix(sender);
-                return PlaceholderResult.value(component == null ? Component.empty() : Util.addHoverText((MutableComponent) component, sender));
+                return PlaceholderResult.value(AdvancedChatAPI.getChannelPrefix(sender));
             } else {
                 return PlaceholderResult.invalid("No player!");
             }

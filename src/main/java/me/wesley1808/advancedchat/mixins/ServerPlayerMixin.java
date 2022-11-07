@@ -1,11 +1,11 @@
 package me.wesley1808.advancedchat.mixins;
 
 import com.mojang.authlib.GameProfile;
-import me.wesley1808.advancedchat.common.config.Config;
-import me.wesley1808.advancedchat.common.data.AdvancedChatData;
-import me.wesley1808.advancedchat.common.data.DataManager;
-import me.wesley1808.advancedchat.common.interfaces.IServerPlayer;
-import me.wesley1808.advancedchat.common.utils.Util;
+import me.wesley1808.advancedchat.api.AdvancedChatAPI;
+import me.wesley1808.advancedchat.impl.config.Config;
+import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
+import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
+import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.MinecraftServer;
@@ -60,7 +60,7 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     @Override
     public void resetActionBarPacket() {
         ServerPlayer player = (ServerPlayer) (Object) this;
-        AdvancedChatData data = DataManager.get(player);
+        AdvancedChatData data = AdvancedChatAPI.getData(player);
         if (Util.isVanished(player) || data.channel == null) {
             this.actionBarPacket = null;
             return;
