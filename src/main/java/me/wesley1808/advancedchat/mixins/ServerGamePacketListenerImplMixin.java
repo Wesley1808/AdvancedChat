@@ -17,7 +17,13 @@ public class ServerGamePacketListenerImplMixin {
     @Shadow
     public ServerPlayer player;
 
-    @Redirect(method = "broadcastChatMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/ChatType;bind(Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/network/chat/ChatType$Bound;"))
+    @Redirect(
+            method = "broadcastChatMessage",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/network/chat/ChatType;bind(Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/network/chat/ChatType$Bound;"
+            )
+    )
     private ChatType.Bound advancedchat$addChannelPrefix(ResourceKey<ChatType> key, Entity entity) {
         MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(this.player);
         return ChatType.bind(key, entity.level.registryAccess(), prefix.append(entity.getDisplayName()));

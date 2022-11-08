@@ -42,7 +42,7 @@ public class ChatChannel {
     }
 
     public boolean hasPermission(ServerPlayer player) {
-        return this.permission == null || Permission.check(player, Permission.BASE + this.permission, 2);
+        return this.permission == null || Permission.check(player, this.permission, 2);
     }
 
     public boolean canSee(ServerPlayer sender, ServerPlayer target) {

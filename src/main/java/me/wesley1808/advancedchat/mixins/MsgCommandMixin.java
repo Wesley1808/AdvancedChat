@@ -35,7 +35,8 @@ public class MsgCommandMixin {
         Util.throwIfIgnored(context.getSource(), targets);
     }
 
-    @Inject(method = "sendMessage",
+    @Inject(
+            method = "sendMessage",
             locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "INVOKE",

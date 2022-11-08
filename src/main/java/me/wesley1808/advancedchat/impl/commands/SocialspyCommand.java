@@ -20,16 +20,17 @@ public class SocialspyCommand {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("socialspy").requires(Permission.require(Permission.SOCIALSPY, 2));
 
         for (Socialspy.Mode mode : Socialspy.Mode.values()) {
-            builder.then(literal(mode.name().toLowerCase())
-                    .executes(context -> execute(context.getSource().getPlayerOrException(), mode))
+            String name = mode.name().toLowerCase();
+            builder.then(literal(name)
+                    .executes(context -> execute(context.getSource().getPlayerOrException(), mode, name))
             );
         }
 
         dispatcher.register(builder);
     }
 
-    private static int execute(ServerPlayer player, Socialspy.Mode mode) {
-        player.sendSystemMessage(Formatter.parse(Config.instance().messages.switchedSocialSpy.replace("${mode}", StringUtils.capitalize(mode.name().toLowerCase()))));
+    private static int execute(ServerPlayer player, Socialspy.Mode mode, String name) {
+        player.sendSystemMessage(Formatter.parse(Config.instance().messages.switchedSocialSpy.replace("${mode}", StringUtils.capitalize(name))));
         DataManager.modify(player, (data) -> data.spyMode = mode);
         return Command.SINGLE_SUCCESS;
     }

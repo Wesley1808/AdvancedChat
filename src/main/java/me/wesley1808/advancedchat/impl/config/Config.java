@@ -12,6 +12,7 @@ public class Config {
 
     public String comment = "Before changing anything, see https://github.com/Wesley1808/AdvancedChat#configuration";
     public boolean actionbar = true;
+    public int actionbarRefreshRate = 40;
     public boolean alwaysTriggerMessageEvent = false;
     public String hoverText = "<dark_aqua>Receivers: <dark_gray>[${receivers}]</dark_gray>";
     public String receiver = "<green>${player}</green>";
@@ -22,7 +23,7 @@ public class Config {
     public ChatChannel[] channels = {
             new ChatChannel(
                     "staff",
-                    "channel.staff",
+                    "advancedchat.channel.staff",
                     true,
                     "<dark_gray>[<aqua>Staff</aqua>]</dark_gray> ",
                     "<dark_aqua>Chat Mode: <green>Staff",
@@ -30,7 +31,7 @@ public class Config {
             ),
             new ChatChannel(
                     "admin",
-                    "channel.admin",
+                    "advancedchat.channel.admin",
                     true,
                     "<dark_gray>[<red>Admin</red>]</dark_gray> ",
                     "<dark_aqua>Chat Mode: <green>Admin",
