@@ -30,7 +30,7 @@ public class Socialspy {
                 Map.of(
                         "source", source.getDisplayName(),
                         "target", target.getDisplayName(),
-                        "message", Component.literal(message.signedContent())
+                        "message", Component.literal(message.signedContent().plain())
                 ))
         );
 
@@ -57,7 +57,7 @@ public class Socialspy {
                 Map.of(
                         "channel", AdvancedChatAPI.getChannelPrefix(sender),
                         "sender", sender.getDisplayName(),
-                        "message", Component.literal(message.signedContent())
+                        "message", Component.literal(message.signedContent().plain())
                 ))
         );
 

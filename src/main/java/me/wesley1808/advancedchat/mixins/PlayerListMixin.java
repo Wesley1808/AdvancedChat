@@ -2,6 +2,7 @@ package me.wesley1808.advancedchat.mixins;
 
 import me.wesley1808.advancedchat.impl.utils.Socialspy;
 import me.wesley1808.advancedchat.impl.utils.Util;
+import net.minecraft.network.chat.ChatSender;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.MinecraftServer;
@@ -27,13 +28,13 @@ public class PlayerListMixin {
     private MinecraftServer server;
 
     @Redirect(
-            method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V",
+            method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatSender;Lnet/minecraft/network/chat/ChatType$Bound;)V",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/server/players/PlayerList;players:Ljava/util/List;"
             )
     )
-    private List<ServerPlayer> advancedchat$filterPlayers(PlayerList instance, PlayerChatMessage message, Predicate<ServerPlayer> predicate, @Nullable ServerPlayer sender, ChatType.Bound bound) {
+    private List<ServerPlayer> advancedchat$filterPlayers(PlayerList instance, PlayerChatMessage message, Predicate<ServerPlayer> predicate, @Nullable ServerPlayer sender, ChatSender chatSender, ChatType.Bound bound) {
         List<ServerPlayer> players = sender != null ? Util.filterIgnored(sender) : this.players;
         if (sender != null && Util.isChat(this.server, bound.chatType())) {
             List<ServerPlayer> receivers = Util.filterByChannel(sender, players);
