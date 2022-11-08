@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.function.Predicate;
 
 public class Permission {
-    private static final String BASE = "advancedchat.";
+    public static final String BASE = "advancedchat.";
     public static final String BYPASS_IGNORE = permission("bypass.ignore");
     public static final String SOCIALSPY = permission("command.socialspy");
     public static final String RELOAD = permission("command.reload");

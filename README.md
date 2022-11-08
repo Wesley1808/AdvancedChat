@@ -5,27 +5,33 @@ A fabric mod that adds a bunch of useful multiplayer chat features to the game.
 
 ### Data-driven chat channels
 
-Allows you to add different channels that players can use to chat in (e.g. per-dimension, local, staff).\
-These channels are completely customizable, and using [predicates](https://github.com/Patbox/PredicateAPI/blob/master/BUILTIN.md) you can control exactly which players receive a message.\
-Besides that, you can also similarly use [placeholders](https://placeholders.pb4.eu/user/default-placeholders/) to customize the prefix and actionbar text from the chat channel.
+Allows you to add different channels that players can use to chat in (e.g. per-dimension, local, staff).
+
+These channels are completely customizable.\
+By using [predicates](https://github.com/Patbox/PredicateAPI/blob/master/BUILTIN.md) you can control exactly which players receive a message.\
+Next to that, you can also use [placeholders](https://placeholders.pb4.eu/user/default-placeholders/) to customize the prefix and actionbar text from the channel.
 ___
 ### Player ignoring
 
-Allows players to ignore others. This will make it so that chat messages from ignored players aren't shown to them.\
+Allows players to ignore others. This will make it so that chat messages from ignored players aren't shown to them.
+
 Players also won't be able to send private messages to others that have ignored them, showing an error in chat.
 
 ___
 ### Socialspy
 
-Since this mod adds different sorts of private conversations, it also includes a socialspy for staff members with different modes.\
-These modes allow you to control which type of messages you want to 'spy' on, as all of them could make chat go very fast.
+Since this mod adds new ways of private conversations, it also includes a socialspy for staff with different modes.
+
+These modes allow you to control which type of messages you want to 'spy' on, as all of them could be too much.
 
 ___
 ### Mod support
 
-This mod has built-in added support for several other mods.\
-For example, vanished players will be taken into account when sending messages and showing receivers.\
-It also adds a new placeholder that mods overriding chat styling like styledchat can use, namely `%advancedchat:channelprefix%`
+This mod has built-in added support for several other mods.
+
+For example, vanished players will be taken into account when sending messages and showing receivers.
+
+It adds a new placeholder that mods overriding chat like styledchat can use: `%advancedchat:channelprefix%`
 
 ## Commands, Permissions and Configuration
 
@@ -37,7 +43,7 @@ It also adds a new placeholder that mods overriding chat styling like styledchat
 
 - `/ignore <player> | /unignore <player>` - Ignores / Unignores the specified player.
 
-- `/socialspy all | channel | private | none` - Lets you control which types private messages you want to see.
+- `/socialspy all | channel | private | none` - Lets you control which messages you want to 'spy' on.
 
 ### Permissions
 
