@@ -10,6 +10,7 @@ import static net.minecraft.advancements.critereon.MinMaxBounds.Doubles.ANY;
 public class Config {
     protected static Config instance = new Config();
 
+    public String comment = "Before changing anything, see https://github.com/Wesley1808/AdvancedChat#configuration";
     public boolean actionbar = true;
     public boolean alwaysTriggerMessageEvent = false;
     public String hoverText = "<dark_aqua>Receivers: <dark_gray>[${receivers}]</dark_gray>";

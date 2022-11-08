@@ -53,20 +53,19 @@ It adds a new placeholder that mods overriding chat like styledchat can use: `%a
 
 - `advancedchat.bypass.ignore` - Permission to bypass ignore.
 
-- `advancedchat.?` - Any permission added by the data-driven chat channels.
+- Any permission added by the data-driven chat channels.
 
 ### Configuration
 
 The configuration file can be found at `/config/advancedchat.json`
 ```json5
 {
+  "comment": "Before changing anything, see https://github.com/Wesley1808/AdvancedChat#configuration",
   // Decides if channels should display action bars.
   "actionbar": true,
-
   // If set to false, advancedchat will cancel ServerMessageEvents.CHAT_MESSAGE if the message was sent through a chat channel.
   // This may help prevent some mods like discord-bridges sending (private) channel messages in a public discord channel.
   "alwaysTriggerMessageEvent": false,
-
   // Text to display when hovering over a channel prefix. By default, it shows the names of everyone that received the chat message.
   // This excludes players who are either vanished or in spectator.
   "hoverText": "<dark_aqua>Receivers: <dark_gray>[${receivers}]</dark_gray>",
@@ -90,7 +89,6 @@ The configuration file can be found at `/config/advancedchat.json`
   "socialSpy": {
     // If enabled, logs private messages in the server logs.
     "logPrivateMessages": false,
-
     // Decides how socialspy messages should be formatted.
     "prefix": "<dark_gray>[<aqua>Spy</aqua>]</dark_gray> ",
     "privateMessage": "<dark_gray>[</dark_gray>${source} <gray>→</gray> ${target}<dark_gray>]</dark_gray> <gray>${message}",
@@ -103,21 +101,16 @@ The configuration file can be found at `/config/advancedchat.json`
     {
       // The name of the channel. This is used to identify them, so don't create multiple channels with the same name.
       "name": "world",
-
       // Allows you to disable the channel without removing it entirely.
       "enabled": true,
-
       // Flag mainly to determine if a channel is only used by staff members. Mostly used for socialspy and vanish support.
       "isStaff": false,
-
       // Permission required to join this channel. Without this permission, you also won't be able to see messages in this channel.
       "permission": "channel.world",
-
-      // The (optional) actionbar text and channel prefixes to display to players inside the channel.
+      // The optional actionbar text and channel prefixes to display to players inside the channel.
       // Both of these support placeholders.
       "actionbar": "<dark_aqua>Chat Mode: <green>%world:name%",
       "prefix": "<dark_gray>[<aqua>%world:name%</aqua>] ",
-
       // An optional minecraft (JSON) predicate, that allows you to control exactly who gets to view each message.
       // Supports any predicate registered through the Predicate API (https://github.com/Patbox/PredicateAPI/blob/master/BUILTIN.md).
       "canSee": {
