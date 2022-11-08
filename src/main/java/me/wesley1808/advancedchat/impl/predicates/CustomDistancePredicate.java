@@ -42,7 +42,8 @@ public class CustomDistancePredicate extends AbstractChatPredicate {
 
         @Override
         public <T> DataResult<T> encode(DistancePredicate input, DynamicOps<T> ops, T prefix) {
-            var encoded = ops instanceof JsonOps ? (T) input.serializeToJson() : JsonOps.INSTANCE.convertTo(ops, input.serializeToJson());
+            // noinspection unchecked
+            T encoded = ops instanceof JsonOps ? (T) input.serializeToJson() : JsonOps.INSTANCE.convertTo(ops, input.serializeToJson());
             return ops.getMap(encoded).flatMap(map -> ops.mergeToMap(prefix, map));
         }
     }

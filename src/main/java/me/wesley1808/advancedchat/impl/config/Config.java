@@ -66,6 +66,7 @@ public class Config {
 
     public static class Messages {
         public String switchedChannels = "<dark_aqua>Chat Mode -> <green>${channel}";
+        public String switchedSocialSpy = "<dark_aqua>Spy Mode -> <green>${mode}";
         public String ignored = "<red>${player} is ignoring you.";
         public String ignoredPlayer = "<dark_aqua>You are now ignoring <green>${player}";
         public String unignoredPlayer = "<dark_aqua>You are no longer ignoring <green>${player}";
@@ -73,7 +74,5 @@ public class Config {
         public String alreadyIgnored = "<red>You are already ignoring ${player}!";
         public String notAlreadyIgnored = "<red>You aren't ignoring ${player}!";
         public String channelNotFound = "<red>Unable to find a channel with name '${name}'!";
-        public String socialSpyEnabled = "<green>Enabled Socialspy!";
-        public String socialSpyDisabled = "<red>Disabled Socialspy!";
     }
 }

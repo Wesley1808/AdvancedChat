@@ -2,6 +2,7 @@ package me.wesley1808.advancedchat.impl.data;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
+import me.wesley1808.advancedchat.impl.utils.Socialspy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +16,7 @@ public class AdvancedChatData {
     @Nullable
     public ChatChannel channel = null;
 
-    public boolean socialSpy = false;
+    public Socialspy.Mode spyMode = Socialspy.Mode.NONE;
 
     public boolean unignore(UUID uuid) {
         return this.ignored.remove(uuid);

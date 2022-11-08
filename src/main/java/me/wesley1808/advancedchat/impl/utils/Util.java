@@ -51,7 +51,7 @@ public class Util {
         if (hover.isEmpty()) return component;
 
         List<ServerPlayer> players = sender.server.getPlayerList().getPlayers();
-        List<ServerPlayer> filtered = Util.filterByChannel(sender);
+        List<ServerPlayer> filtered = Util.filterByChannel(sender, players);
         if (players == filtered) return component;
 
         filtered.removeIf(player -> player.isSpectator() || Util.isVanished(player));
@@ -79,10 +79,6 @@ public class Util {
         }
 
         return prefix == null ? Component.empty() : Util.addHoverText((MutableComponent) prefix, player);
-    }
-
-    public static List<ServerPlayer> filterByChannel(ServerPlayer sender) {
-        return filterByChannel(sender, sender.server.getPlayerList().getPlayers());
     }
 
     public static List<ServerPlayer> filterByChannel(ServerPlayer sender, List<ServerPlayer> players) {

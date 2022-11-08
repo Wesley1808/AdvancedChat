@@ -34,7 +34,10 @@ public class Socialspy {
                 ))
         );
 
-        Socialspy.send(target.server, text, (player) -> player != target && player != source.getPlayer());
+        Socialspy.send(target.server, text, (player) -> {
+            Socialspy.Mode mode = DataManager.get(player).spyMode;
+            return player != target && player != source.getPlayer() && Mode.acceptsPrivateMessages(mode);
+        });
         if (config.logPrivateMessages) {
             AdvancedChat.getLogger().info(text.getString());
         }
@@ -58,15 +61,32 @@ public class Socialspy {
                 ))
         );
 
-        Socialspy.send(sender.server, text, (player) -> !receivers.contains(player));
+        Socialspy.send(sender.server, text, (player) -> {
+            Socialspy.Mode mode = DataManager.get(player).spyMode;
+            return Mode.acceptsChannelMessages(mode) && !receivers.contains(player);
+        });
     }
 
     private static void send(MinecraftServer server, Component message, @Nullable Predicate<ServerPlayer> predicate) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            AdvancedChatData data = DataManager.get(player);
-            if (data.socialSpy && (predicate == null || predicate.test(player)) && Permission.check(player, Permission.SOCIALSPY, 2)) {
+            if (Permission.check(player, Permission.SOCIALSPY, 2) && (predicate == null || predicate.test(player))) {
                 player.sendSystemMessage(message);
             }
+        }
+    }
+
+    public enum Mode {
+        ALL,
+        CHANNEL,
+        PRIVATE,
+        NONE;
+
+        private static boolean acceptsPrivateMessages(Mode mode) {
+            return mode == ALL || mode == PRIVATE;
+        }
+
+        private static boolean acceptsChannelMessages(Mode mode) {
+            return mode == ALL || mode == CHANNEL;
         }
     }
 }
