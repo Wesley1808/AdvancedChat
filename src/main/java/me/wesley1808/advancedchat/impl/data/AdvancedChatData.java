@@ -13,10 +13,11 @@ public class AdvancedChatData {
     @NotNull
     public Set<UUID> ignored = new ObjectOpenHashSet<>();
 
+    @NotNull
+    public Socialspy.Mode spyMode = Socialspy.Mode.NONE;
+
     @Nullable
     public ChatChannel channel = null;
-
-    public Socialspy.Mode spyMode = Socialspy.Mode.NONE;
 
     public boolean unignore(UUID uuid) {
         return this.ignored.remove(uuid);

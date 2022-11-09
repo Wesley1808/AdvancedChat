@@ -13,7 +13,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -31,12 +30,12 @@ public class Socialspy {
                         "source", source.getDisplayName(),
                         "target", target.getDisplayName(),
                         "message", Component.literal(message.signedContent().plain())
-                ))
-        );
+                )
+        ));
 
         Socialspy.send(target.server, text, (player) -> {
             Socialspy.Mode mode = DataManager.get(player).spyMode;
-            return player != target && player != source.getPlayer() && Mode.acceptsPrivateMessages(mode);
+            return mode.acceptsPrivate() && player != target && player != source.getPlayer();
         });
         if (config.logPrivateMessages) {
             AdvancedChat.getLogger().info(text.getString());
@@ -58,18 +57,18 @@ public class Socialspy {
                         "channel", AdvancedChatAPI.getChannelPrefix(sender),
                         "sender", sender.getDisplayName(),
                         "message", Component.literal(message.signedContent().plain())
-                ))
-        );
+                )
+        ));
 
         Socialspy.send(sender.server, text, (player) -> {
             Socialspy.Mode mode = DataManager.get(player).spyMode;
-            return Mode.acceptsChannelMessages(mode) && !receivers.contains(player);
+            return mode.acceptsChannel() && !receivers.contains(player);
         });
     }
 
-    private static void send(MinecraftServer server, Component message, @Nullable Predicate<ServerPlayer> predicate) {
+    private static void send(MinecraftServer server, Component message, Predicate<ServerPlayer> predicate) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (Permission.check(player, Permission.SOCIALSPY, 2) && (predicate == null || predicate.test(player))) {
+            if (Permission.check(player, Permission.SOCIALSPY, 2) && predicate.test(player)) {
                 player.sendSystemMessage(message);
             }
         }
@@ -81,12 +80,12 @@ public class Socialspy {
         PRIVATE,
         NONE;
 
-        private static boolean acceptsPrivateMessages(Mode mode) {
-            return mode == ALL || mode == PRIVATE;
+        private boolean acceptsChannel() {
+            return this == ALL || this == CHANNEL;
         }
 
-        private static boolean acceptsChannelMessages(Mode mode) {
-            return mode == ALL || mode == CHANNEL;
+        private boolean acceptsPrivate() {
+            return this == ALL || this == PRIVATE;
         }
     }
 }

@@ -42,8 +42,9 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void advancedchat$onTick(CallbackInfo ci) {
-        if (Config.instance().actionbar) {
-            if (this.tickCount % 40 == 0) {
+        Config config = Config.instance();
+        if (config.actionbar) {
+            if (this.tickCount % config.actionbarRefreshRate == 0) {
                 this.resetActionBarPacket();
             }
 

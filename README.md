@@ -63,6 +63,8 @@ The configuration file can be found at `/config/advancedchat.json`
   "comment": "Before changing anything, see https://github.com/Wesley1808/AdvancedChat#configuration",
   // Decides if channels should display action bars.
   "actionbar": true,
+  // Ticks between action bar updates. Very high values may cause the actionbar to lag behind in certain situations.
+  "actionbarRefreshRate": 40,
   // If set to false, advancedchat will cancel ServerMessageEvents.CHAT_MESSAGE if the message was sent through a chat channel.
   // This may help prevent some mods like discord-bridges sending (private) channel messages in a public discord channel.
   "alwaysTriggerMessageEvent": false,
@@ -106,7 +108,7 @@ The configuration file can be found at `/config/advancedchat.json`
       // Flag mainly to determine if a channel is only used by staff members. Mostly used for socialspy and vanish support.
       "isStaff": false,
       // Permission required to join this channel. Without this permission, you also won't be able to see messages in this channel.
-      "permission": "channel.world",
+      "permission": "advancedchat.channel.world",
       // The optional actionbar text and channel prefixes to display to players inside the channel.
       // Both of these support placeholders.
       "actionbar": "<dark_aqua>Chat Mode: <green>%world:name%",
