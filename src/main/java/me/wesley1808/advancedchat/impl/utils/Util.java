@@ -17,6 +17,7 @@ import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -128,7 +129,7 @@ public class Util {
     }
 
     public static boolean isChat(MinecraftServer server, ChatType type) {
-        Optional<? extends Registry<ChatType>> optional = server.registryAccess().registry(Registry.CHAT_TYPE_REGISTRY);
+        Optional<? extends Registry<ChatType>> optional = server.registryAccess().registry(Registries.CHAT_TYPE);
         ResourceLocation key = optional.map(registry -> registry.getKey(type)).orElse(null);
         return ChatType.CHAT.location().equals(key);
     }
