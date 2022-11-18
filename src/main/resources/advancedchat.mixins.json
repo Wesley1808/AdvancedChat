@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MsgCommandMixin",
+    "PlayerListInvoker",
     "PlayerListMixin",
     "ServerGamePacketListenerImplMixin",
     "ServerMessageEventsMixin",

@@ -36,6 +36,9 @@ dependencies {
     // Predicate API
     modImplementation(include("eu.pb4:predicate-api:${project.predicate_api_version}"))
 
+    // StyledChat
+    modCompileOnly("maven.modrinth:styled-chat:${project.styledchat_version}")
+
     // Vanish
     modCompileOnly("maven.modrinth:vanish:${project.vanish_version}")
 }

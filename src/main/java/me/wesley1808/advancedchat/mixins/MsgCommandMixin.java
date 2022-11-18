@@ -43,9 +43,9 @@ public class MsgCommandMixin {
                     target = "Lnet/minecraft/commands/CommandSourceStack;shouldFilterMessageTo(Lnet/minecraft/server/level/ServerPlayer;)Z"
             )
     )
-    private static void advancedchat$sendSocialSpy(CommandSourceStack commandSource, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci, ChatType.Bound bound, OutgoingChatMessage outgoingChatMessage, boolean bl, Iterator<?> var6, ServerPlayer target, ChatType.Bound bound2) {
-        if (commandSource.isPlayer()) {
-            Socialspy.send(commandSource, target, message);
+    private static void advancedchat$sendSocialSpy(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci, ChatType.Bound bound, OutgoingChatMessage outgoingChatMessage, boolean bl, Iterator<?> var6, ServerPlayer target, ChatType.Bound bound2) {
+        if (source.isPlayer()) {
+            Socialspy.send(source, target, message);
         }
     }
 }
