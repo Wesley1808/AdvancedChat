@@ -16,7 +16,6 @@ import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.ModCompat;
 import me.wesley1808.advancedchat.impl.utils.Util;
-import me.wesley1808.advancedchat.mixins.PlayerListInvoker;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.MessageArgument;
 import net.minecraft.network.chat.ChatType;
@@ -88,15 +87,8 @@ public class ChatCommand {
                 }
 
                 MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(player);
-                ChatType.Bound bound = ChatType.bind(ChatType.CHAT, player.level.registryAccess(), prefix.append(player.getDisplayName()));
-
-                if (isGlobal) {
-                    player.server.getPlayerList().broadcastChatMessage(message, player, bound);
-                } else {
-                    // We can't use the other broadcast methods here as they could trigger fabric api's message event.
-                    ((PlayerListInvoker) player.server.getPlayerList()).invokeBroadcastChatMessage(message, player::shouldFilterMessageTo, player, bound);
-                }
-
+                ChatType.Bound bound = ChatType.bind(ChatType.CHAT, player.server.registryAccess(), prefix.append(player.getDisplayName()));
+                player.server.getPlayerList().broadcastChatMessage(message, player, bound);
                 data.channel = original;
             });
         });
