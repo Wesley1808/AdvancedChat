@@ -3,6 +3,8 @@ package me.wesley1808.advancedchat.impl.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import eu.pb4.styledchat.StyledChatUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -19,7 +21,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.MessageArgument;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,24 +33,23 @@ import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.arguments.MessageArgument.message;
 
 public class ChatCommand {
+    private static final String MESSAGE_KEY = "message";
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("chat");
 
-        builder.then(literal("global").executes(ctx -> switchChannel(ctx.getSource().getPlayerOrException(), "Global", true)));
+        builder.then(literal("global")
+                .executes(ctx -> switchChannel(ctx.getSource().getPlayerOrException(), "global", true))
+                .then(argument(MESSAGE_KEY, message())
+                        .executes(ctx -> sendInChannel(ctx, "global", true))
+                )
+        );
 
         builder.then(argument("channel", word())
                 .suggests(availableChannels())
                 .executes(ctx -> switchChannel(ctx.getSource().getPlayerOrException(), getString(ctx, "channel"), false))
-                .then(argument("message", message())
-                        .executes(ctx -> {
-                            CommandSourceStack source = ctx.getSource();
-                            ServerPlayer player = source.getPlayerOrException();
-                            MessageArgument.resolveChatMessage(ctx, "message", (message) -> {
-                                sendInChannel(source, player, getString(ctx, "channel"), message);
-                            });
-                            return Command.SINGLE_SUCCESS;
-                        })
+                .then(argument(MESSAGE_KEY, message())
+                        .executes(ctx -> sendInChannel(ctx, getString(ctx, "channel"), false))
                 )
         );
 
@@ -69,29 +69,38 @@ public class ChatCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void sendInChannel(CommandSourceStack source, ServerPlayer player, String name, PlayerChatMessage message) {
-        ChatChannel channel = Channels.get(name);
-        if (channel == null || !channel.canPlayerUse(player)) {
+    private static int sendInChannel(CommandContext<CommandSourceStack> ctx, String name, boolean isGlobal) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        ChatChannel channel = isGlobal ? null : Channels.get(name);
+        if (!isGlobal && (channel == null || !channel.canPlayerUse(player))) {
             player.sendSystemMessage(Formatter.parse(Config.instance().messages.channelNotFound.replace("${name}", name)));
-            return;
+            return 0;
         }
 
-        DataManager.modify(player, (data) -> {
-            ChatChannel original = data.channel;
-            data.channel = channel;
+        MessageArgument.resolveChatMessage(ctx, MESSAGE_KEY, (message) -> {
+            DataManager.modify(player, (data) -> {
+                ChatChannel original = data.channel;
+                data.channel = channel;
 
-            // StyledChat support
-            if (ModCompat.STYLEDCHAT) {
-                StyledChatUtils.modifyForSending(message, source, ChatType.CHAT);
-            }
+                // StyledChat support
+                if (ModCompat.STYLEDCHAT) {
+                    StyledChatUtils.modifyForSending(message, ctx.getSource(), ChatType.CHAT);
+                }
 
-            MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(player);
-            ChatType.Bound bound = ChatType.bind(ChatType.CHAT, player.level.registryAccess(), prefix.append(player.getDisplayName()));
+                MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(player);
+                ChatType.Bound bound = ChatType.bind(ChatType.CHAT, player.level.registryAccess(), prefix.append(player.getDisplayName()));
 
-            // We can't use the other broadcast methods here as they would trigger fabric api's message event.
-            ((PlayerListInvoker) player.server.getPlayerList()).invokeBroadcastChatMessage(message, player::shouldFilterMessageTo, player, bound);
-            data.channel = original;
+                if (isGlobal) {
+                    player.server.getPlayerList().broadcastChatMessage(message, player, bound);
+                } else {
+                    // We can't use the other broadcast methods here as they could trigger fabric api's message event.
+                    ((PlayerListInvoker) player.server.getPlayerList()).invokeBroadcastChatMessage(message, player::shouldFilterMessageTo, player, bound);
+                }
+
+                data.channel = original;
+            });
         });
+        return Command.SINGLE_SUCCESS;
     }
 
     private static SuggestionProvider<CommandSourceStack> availableChannels() {
