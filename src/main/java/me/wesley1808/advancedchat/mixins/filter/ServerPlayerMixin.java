@@ -1,7 +1,6 @@
 package me.wesley1808.advancedchat.mixins.filter;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.utils.Filter;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,8 +26,14 @@ public class ServerPlayerMixin {
         return original;
     }
 
-    @ModifyReturnValue(method = "shouldFilterMessageTo", at = @At(value = "RETURN"))
-    private boolean advancedchat$forceEnableTextFiltering(boolean original) {
-        return original || Config.instance().filter.enabled;
+    @ModifyExpressionValue(
+            method = "updateOptions",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/network/protocol/game/ServerboundClientInformationPacket;textFilteringEnabled()Z"
+            )
+    )
+    private boolean forceTextFiltering(boolean original) {
+        return original || Config.instance().filter.forceTextFiltering;
     }
 }

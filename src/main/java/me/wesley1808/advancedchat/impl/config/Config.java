@@ -69,6 +69,7 @@ public class Config {
 
     public static class Filter {
         public boolean enabled = false;
+        public boolean forceTextFiltering = false;
         public boolean logFilteredMessages = true;
         public String[] filteredWords = {};
     }
