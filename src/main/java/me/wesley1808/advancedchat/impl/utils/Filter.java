@@ -1,6 +1,7 @@
 package me.wesley1808.advancedchat.impl.utils;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import me.wesley1808.advancedchat.api.AdvancedChatEvents;
 import me.wesley1808.advancedchat.impl.AdvancedChat;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.mixins.filter.FilterMaskInvoker;
@@ -57,13 +58,14 @@ public final class Filter implements TextFilter {
 
         BitSet filtered = new BitSet(input.length());
         for (String word : filter.filteredWords) {
-            final int startIndex = StringUtils.indexOfIgnoreCase(input, word, 0);
+            final int startIndex = StringUtils.indexOfIgnoreCase(input, word);
             for (int curr = startIndex; curr != StringUtils.INDEX_NOT_FOUND; curr = StringUtils.indexOfIgnoreCase(input, word, curr)) {
                 filtered.set(curr, curr += word.length());
             }
         }
 
         if (!filtered.isEmpty()) {
+            AdvancedChatEvents.MESSAGE_FILTERED.invoker().onMessageFiltered(this.player, input);
             if (filter.logFilteredMessages) {
                 AdvancedChat.getLogger().info("[AdvancedChat] Filtered text from {}: {}", this.player.getScoreboardName(), input);
             }
