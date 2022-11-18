@@ -19,6 +19,7 @@ public class Config {
     public String selfPrefix = "<dark_gray>[<aqua>Self</aqua>]</dark_gray> ";
     public Messages messages = new Messages();
     public Socialspy socialSpy = new Socialspy();
+    public Filter filter = new Filter();
 
     public ChatChannel[] channels = {
             new ChatChannel(
@@ -64,6 +65,12 @@ public class Config {
         public String prefix = "<dark_gray>[<aqua>Spy</aqua>]</dark_gray> ";
         public String privateMessage = "<dark_gray>[</dark_gray>${source} <gray>→</gray> ${target}<dark_gray>]</dark_gray> <gray>${message}";
         public String channelMessage = "${channel}${sender} <dark_gray>»</dark_gray> ${message}";
+    }
+
+    public static class Filter {
+        public boolean enabled = false;
+        public boolean logFilteredMessages = true;
+        public String[] filteredWords = {};
     }
 
     public static class Messages {

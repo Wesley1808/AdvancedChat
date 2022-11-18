@@ -12,6 +12,7 @@ import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.channels.Channels;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
+import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.ModCompat;
@@ -77,20 +78,19 @@ public class ChatCommand {
         }
 
         MessageArgument.resolveChatMessage(ctx, MESSAGE_KEY, (message) -> {
-            DataManager.modify(player, (data) -> {
-                ChatChannel original = data.channel;
-                data.channel = channel;
+            AdvancedChatData data = DataManager.get(player);
+            ChatChannel original = data.channel;
+            data.channel = channel;
 
+            if (ModCompat.STYLEDCHAT) {
                 // StyledChat support
-                if (ModCompat.STYLEDCHAT) {
-                    StyledChatUtils.modifyForSending(message, ctx.getSource(), ChatType.CHAT);
-                }
+                StyledChatUtils.modifyForSending(message, ctx.getSource(), ChatType.CHAT);
+            }
 
-                MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(player);
-                ChatType.Bound bound = ChatType.bind(ChatType.CHAT, player.server.registryAccess(), prefix.append(player.getDisplayName()));
-                player.server.getPlayerList().broadcastChatMessage(message, player, bound);
-                data.channel = original;
-            });
+            MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(player);
+            ChatType.Bound bound = ChatType.bind(ChatType.CHAT, player.server.registryAccess(), prefix.append(player.getDisplayName()));
+            player.server.getPlayerList().broadcastChatMessage(message, player, bound);
+            data.channel = original;
         });
         return Command.SINGLE_SUCCESS;
     }

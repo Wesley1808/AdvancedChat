@@ -1,6 +1,7 @@
 package me.wesley1808.advancedchat.impl;
 
 import com.mojang.logging.LogUtils;
+import eu.pb4.styledchat.StyledChatEvents;
 import me.wesley1808.advancedchat.impl.channels.Channels;
 import me.wesley1808.advancedchat.impl.commands.AdvancedChatCommands;
 import me.wesley1808.advancedchat.impl.commands.ChatCommand;
@@ -9,6 +10,8 @@ import me.wesley1808.advancedchat.impl.commands.SocialspyCommand;
 import me.wesley1808.advancedchat.impl.config.ConfigManager;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.predicates.Predicates;
+import me.wesley1808.advancedchat.impl.utils.Filter;
+import me.wesley1808.advancedchat.impl.utils.ModCompat;
 import me.wesley1808.advancedchat.impl.utils.PlaceHolders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -40,5 +43,11 @@ public class AdvancedChat implements ModInitializer {
             IgnoreCommand.register(dispatcher);
             SocialspyCommand.register(dispatcher);
         });
+
+        if (ModCompat.STYLEDCHAT) {
+            StyledChatEvents.PRE_MESSAGE_CONTENT.register((message, context) -> {
+                return context.hasPlayer() ? Filter.filterStyledChat(message) : message;
+            });
+        }
     }
 }

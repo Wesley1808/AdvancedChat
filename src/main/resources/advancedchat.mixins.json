@@ -8,7 +8,10 @@
     "PlayerListMixin",
     "ServerGamePacketListenerImplMixin",
     "ServerMessageEventsMixin",
-    "ServerPlayerMixin"
+    "ServerPlayerMixin",
+    "filter.CommandSourceStackMixin",
+    "filter.FilterMaskInvoker",
+    "filter.ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

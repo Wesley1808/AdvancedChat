@@ -12,7 +12,6 @@ public class Json {
     public static final Gson PLAYER_DATA = new GsonBuilder()
             .registerTypeHierarchyAdapter(ChatChannel.class, new ChannelSerializer())
             .disableHtmlEscaping()
-            .setPrettyPrinting()
             .setLenient()
             .create();
 
