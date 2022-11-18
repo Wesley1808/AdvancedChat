@@ -25,13 +25,24 @@ Since this mod adds new ways of private conversations, it also includes a social
 These modes allow you to control which type of messages you want to 'spy' on, as all of them could be too much.
 
 ___
+### Text Filter
+
+Allows you to filter out certain words sent from a client, like chat messages, commands, signs and books.
+
+This is based on the vanilla realms filter, so it will also work with any other mods that use it.
+
+Note: unless styled-chat is installed, messages are filtered on the client. This is needed for validation.\
+In this case, if a mod redirects chat messages to system messages they will NOT be filtered!
+
+
+___
 ### Mod support
 
 This mod has built-in added support for several other mods.
 
 For example, vanished players will be taken into account when sending messages and showing receivers.
 
-It adds a new placeholder that mods overriding chat like styledchat can use: `%advancedchat:channelprefix%`
+It adds a new placeholder that mods overriding chat like styled-chat can use: `%advancedchat:channelprefix%`
 
 ## Commands, Permissions and Configuration
 
@@ -95,6 +106,24 @@ The configuration file can be found at `/config/advancedchat.json`
     "prefix": "<dark_gray>[<aqua>Spy</aqua>]</dark_gray> ",
     "privateMessage": "<dark_gray>[</dark_gray>${source} <gray>→</gray> ${target}<dark_gray>]</dark_gray> <gray>${message}",
     "channelMessage": "${channel}${sender} <dark_gray>»</dark_gray> ${message}"
+  },
+
+  // Text filter configuration.
+  "filter": {
+    // Enables the text filter. 
+    // This is based on the vanilla realms filter, so besides messages this will also work on signs, books, etc.
+    "enabled": false,
+    // By default, messages will only be sent as filtered to a client if they have text filtering enabled.
+    // Setting this to true will make it filter messages regardless of the client's settings.
+    // Note: Vanilla doesn't filter messages if the sender is also the receiver, so your own messages won't appear filtered to you. 
+    "forceTextFiltering": false,
+    // If enabled, logs whenever a message gets filtered in the server logs.
+    "logFilteredMessages": true,
+    // All the words that should be filtered.
+    "filteredWords": [
+      "bad-word",
+      "bad-word-2"
+    ]
   },
 
   // An array of chat channels.

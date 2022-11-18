@@ -17,7 +17,7 @@ import java.util.BitSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public final class Filter implements TextFilter {
+public class Filter implements TextFilter {
     private static final String HOVER_TEXT = Component.translatable("chat.filtered").getString();
     private final ServerPlayer player;
 
@@ -41,12 +41,12 @@ public final class Filter implements TextFilter {
     @Override
     public CompletableFuture<List<FilteredText>> processMessageBundle(List<String> list) {
         return CompletableFuture.supplyAsync(() -> {
-            ObjectArrayList<FilteredText> filteredList = new ObjectArrayList<>(list.size());
+            ObjectArrayList<FilteredText> filtered = new ObjectArrayList<>(list.size());
             for (String input : list) {
-                filteredList.add(new FilteredText(input, this.parseMask(input)));
+                filtered.add(new FilteredText(input, this.parseMask(input)));
             }
 
-            return filteredList;
+            return filtered;
         });
     }
 

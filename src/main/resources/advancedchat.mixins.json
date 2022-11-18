@@ -10,6 +10,7 @@
     "ServerMessageEventsMixin",
     "ServerPlayerMixin",
     "filter.FilterMaskInvoker",
+    "filter.MessageArgumentMixin",
     "filter.ServerPlayerMixin"
   ],
   "injectors": {
