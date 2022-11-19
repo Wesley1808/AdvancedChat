@@ -5,7 +5,6 @@ import me.wesley1808.advancedchat.api.AdvancedChatEvents;
 import me.wesley1808.advancedchat.impl.AdvancedChat;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.mixins.filter.FilterMaskInvoker;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FilterMask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class Filter implements TextFilter {
-    private static final String HOVER_TEXT = Component.translatable("chat.filtered").getString();
     private final ServerPlayer player;
 
     public Filter(ServerPlayer player) {
@@ -84,7 +82,7 @@ public class Filter implements TextFilter {
 
         String filtered = input;
         for (String word : filter.filteredWords) {
-            filtered = StringUtils.replaceIgnoreCase(filtered, word, String.format("<hover:'%s'>%s</hover>", HOVER_TEXT, "\\*".repeat(word.length())));
+            filtered = StringUtils.replaceIgnoreCase(filtered, word, "#".repeat(word.length()));
         }
 
         return filtered;
