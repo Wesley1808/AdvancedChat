@@ -5,8 +5,6 @@ import me.wesley1808.advancedchat.impl.predicates.CustomDistancePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 
-import static net.minecraft.advancements.critereon.MinMaxBounds.Doubles.ANY;
-
 public class Config {
     protected static Config instance = new Config();
 
@@ -52,7 +50,7 @@ public class Config {
                     false,
                     "<dark_gray>[<aqua>%world:name%</aqua>]</dark_gray> ",
                     "<dark_aqua>Chat Mode: <green>%world:name%",
-                    new CustomDistancePredicate(new DistancePredicate(ANY, ANY, ANY, ANY, ANY))
+                    new CustomDistancePredicate(DistancePredicate.absolute(MinMaxBounds.Doubles.ANY))
             )
     };
 

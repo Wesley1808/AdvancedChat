@@ -73,7 +73,7 @@ public class Util {
         Component prefix = null;
 
         AdvancedChatData data = DataManager.get(player);
-        if (!ChatChannel.isStaff(data.channel) && isVanished(player)) {
+        if (ChatChannel.notStaff(data.channel) && isVanished(player)) {
             prefix = Formatter.parse(Config.instance().selfPrefix);
         } else if (data.channel != null) {
             prefix = data.channel.getPrefix(player);
@@ -84,7 +84,7 @@ public class Util {
 
     public static List<ServerPlayer> filterByChannel(ServerPlayer sender, List<ServerPlayer> players) {
         AdvancedChatData data = DataManager.get(sender);
-        return !ChatChannel.isStaff(data.channel) && isVanished(sender)
+        return ChatChannel.notStaff(data.channel) && isVanished(sender)
                 ? Lists.newArrayList(sender)
                 : getPlayersIn(sender, data.channel, players);
     }

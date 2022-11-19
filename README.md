@@ -27,7 +27,7 @@ These modes allow you to control which type of messages you want to 'spy' on, as
 ___
 ### Text Filter
 
-Allows you to filter out certain words sent from a client, like chat messages, commands, signs and books.
+Allows you to filter specific text received from the client, like chat messages, commands, signs and books.
 
 This is based on the vanilla realms filter, so it will also work with any other mods that use it.
 
@@ -50,11 +50,13 @@ It adds a new placeholder that mods overriding chat like styled-chat can use: `%
 
 - `/advancedchat reload` - Reloads the configuration file and all the chat channels.
 
-- `/chat <channel>` - Lets each player control which chat channel they want to talk in.
+- `/chat <channel>` - Lets you switch between chat channels that are availabe to you.
+
+- `/chat <channel> <message>` - Lets you send a message in the specified channel, without switching.
 
 - `/ignore <player> | /unignore <player>` - Ignores / Unignores the specified player.
 
-- `/socialspy all | channel | private | none` - Lets you control which messages you want to 'spy' on.
+- `/socialspy all | channel | private | none` - Lets you control which spy messages you want to receive.
 
 ### Permissions
 
@@ -134,7 +136,7 @@ The configuration file can be found at `/config/advancedchat.json`
       "name": "world",
       // Allows you to disable the channel without removing it entirely.
       "enabled": true,
-      // Flag mainly to determine if a channel is only used by staff members. Mostly used for socialspy and vanish support.
+      // Flag to determine if a channel is only used by staff members. Mostly used for vanish support.
       "isStaff": false,
       // Permission required to join this channel. Without this permission, you also won't be able to see messages in this channel.
       "permission": "advancedchat.channel.world",

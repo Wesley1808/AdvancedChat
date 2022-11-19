@@ -29,8 +29,8 @@ public class ChatChannel {
         this.canSee = canSee;
     }
 
-    public static boolean isStaff(ChatChannel channel) {
-        return channel != null && channel.isStaff;
+    public static boolean notStaff(ChatChannel channel) {
+        return channel == null || !channel.isStaff;
     }
 
     public boolean canPlayerUse(ServerPlayer player) {

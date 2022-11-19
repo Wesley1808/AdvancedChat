@@ -5,7 +5,6 @@ import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.AdvancedChat;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
-import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -44,8 +43,8 @@ public class Socialspy {
 
     // Channel Messages
     public static void send(ServerPlayer sender, List<ServerPlayer> receivers, PlayerChatMessage message) {
-        AdvancedChatData data = DataManager.get(sender);
-        if (data.channel == null || ChatChannel.isStaff(data.channel)) {
+        ChatChannel channel = DataManager.get(sender).channel;
+        if (channel == null) {
             return;
         }
 
@@ -62,7 +61,7 @@ public class Socialspy {
 
         Socialspy.send(sender.server, text, (player) -> {
             Socialspy.Mode mode = DataManager.get(player).spyMode;
-            return mode.acceptsChannel() && !receivers.contains(player);
+            return mode.acceptsChannel() && channel.canPlayerUse(player) && !receivers.contains(player);
         });
     }
 

@@ -18,12 +18,11 @@ public class CustomDistancePredicate extends AbstractChatPredicate {
             .apply(instance, CustomDistancePredicate::new)
     );
 
+    private final DistancePredicate predicate;
     public CustomDistancePredicate(DistancePredicate predicate) {
         super(ID, CODEC);
         this.predicate = predicate;
     }
-
-    private final DistancePredicate predicate;
 
     @Override
     public PredicateResult<?> test(ServerPlayer sender, ServerPlayer target) {

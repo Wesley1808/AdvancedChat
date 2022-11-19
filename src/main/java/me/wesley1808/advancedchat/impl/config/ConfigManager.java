@@ -26,8 +26,6 @@ public class ConfigManager {
         } catch (Exception ex) {
             AdvancedChat.getLogger().error("Failed to load config!", ex);
         }
-
-        save();
     }
 
     private static void save() {
