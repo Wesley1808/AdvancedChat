@@ -31,7 +31,7 @@ public class SocialspyCommand {
 
     private static int execute(ServerPlayer player, Socialspy.Mode mode, String name) {
         player.sendSystemMessage(Formatter.parse(Config.instance().messages.switchedSocialSpy.replace("${mode}", StringUtils.capitalize(name))));
-        DataManager.modify(player, (data) -> data.spyMode = mode);
+        DataManager.get(player).spyMode = mode;
         return Command.SINGLE_SUCCESS;
     }
 }

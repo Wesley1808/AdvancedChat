@@ -40,22 +40,20 @@ public class IgnoreCommand {
             return 0;
         }
 
-        DataManager.modify(source, (data) -> {
-            if (ignore) {
-                if (data.ignore(target.getId())) {
-                    sendMessage(source, messages.ignoredPlayer, target);
-                } else {
-                    sendMessage(source, messages.alreadyIgnored, target);
-                }
+        AdvancedChatData data = DataManager.get(source);
+        if (ignore) {
+            if (data.ignore(target.getId())) {
+                sendMessage(source, messages.ignoredPlayer, target);
             } else {
-                if (data.unignore(target.getId())) {
-                    sendMessage(source, messages.unignoredPlayer, target);
-                } else {
-                    sendMessage(source, messages.notAlreadyIgnored, target);
-                }
+                sendMessage(source, messages.alreadyIgnored, target);
             }
-        });
-
+        } else {
+            if (data.unignore(target.getId())) {
+                sendMessage(source, messages.unignoredPlayer, target);
+            } else {
+                sendMessage(source, messages.notAlreadyIgnored, target);
+            }
+        }
         return Command.SINGLE_SUCCESS;
     }
 

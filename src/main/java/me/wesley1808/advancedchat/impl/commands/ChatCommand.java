@@ -64,7 +64,7 @@ public class ChatCommand {
         }
 
         player.sendSystemMessage(Formatter.parse(Config.instance().messages.switchedChannels.replace("${channel}", StringUtils.capitalize(name))));
-        DataManager.modify(player, (data) -> data.channel = channel);
+        DataManager.get(player).channel = channel;
         Util.resetActionBarPacket(player);
         return Command.SINGLE_SUCCESS;
     }

@@ -6,8 +6,6 @@ import eu.pb4.playerdata.api.storage.PlayerDataStorage;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-
 public class DataManager {
     private static final PlayerDataStorage<AdvancedChatData> DATA_STORAGE = new JsonDataStorage<>("advancedchat", AdvancedChatData.class, Json.PLAYER_DATA);
 
@@ -18,12 +16,11 @@ public class DataManager {
     @NotNull
     public static AdvancedChatData get(ServerPlayer player) {
         AdvancedChatData data = PlayerDataApi.getCustomDataFor(player, DATA_STORAGE);
-        return data == null ? new AdvancedChatData() : data;
-    }
+        if (data == null) {
+            data = new AdvancedChatData();
+            PlayerDataApi.setCustomDataFor(player, DATA_STORAGE, data);
+        }
 
-    public static void modify(ServerPlayer player, Consumer<AdvancedChatData> consumer) {
-        AdvancedChatData data = DataManager.get(player);
-        consumer.accept(data);
-        PlayerDataApi.setCustomDataFor(player, DATA_STORAGE, data);
+        return data;
     }
 }

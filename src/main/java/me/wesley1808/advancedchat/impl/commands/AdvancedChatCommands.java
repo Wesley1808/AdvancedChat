@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.wesley1808.advancedchat.impl.channels.Channels;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.ConfigManager;
+import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.utils.Permission;
 import me.wesley1808.advancedchat.impl.utils.Util;
@@ -32,15 +33,15 @@ public class AdvancedChatCommands {
         Channels.register();
 
         for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
-            DataManager.modify(player, (data) -> {
-                String prevName = data.channel != null ? data.channel.name : null;
-                ChatChannel channel = Channels.get(prevName);
-                if (channel != null && channel.canPlayerUse(player)) {
-                    data.channel = channel;
-                } else {
-                    data.channel = null;
-                }
-            });
+            AdvancedChatData data = DataManager.get(player);
+            String prevName = data.channel != null ? data.channel.name : null;
+            ChatChannel channel = Channels.get(prevName);
+            if (channel != null && channel.canPlayerUse(player)) {
+                data.channel = channel;
+            } else {
+                data.channel = null;
+            }
+
             Util.resetActionBarPacket(player);
         }
 
