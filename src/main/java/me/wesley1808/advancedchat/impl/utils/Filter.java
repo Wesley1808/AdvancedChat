@@ -1,6 +1,5 @@
 package me.wesley1808.advancedchat.impl.utils;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.advancedchat.api.AdvancedChatEvents;
 import me.wesley1808.advancedchat.impl.AdvancedChat;
 import me.wesley1808.advancedchat.impl.config.Config;
@@ -10,7 +9,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.server.network.TextFilter;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.BitSet;
 import java.util.List;
@@ -32,59 +30,50 @@ public class Filter implements TextFilter {
     }
 
     @Override
-    public CompletableFuture<FilteredText> processStreamMessage(@NotNull String input) {
-        return CompletableFuture.supplyAsync(() -> new FilteredText(input, this.parseMask(input)));
+    public CompletableFuture<FilteredText> processStreamMessage(String input) {
+        if (Filter.isEnabled()) {
+            return CompletableFuture.supplyAsync(() -> this.filter(input));
+        } else {
+            return CompletableFuture.completedFuture(FilteredText.passThrough(input));
+        }
     }
 
     @Override
     public CompletableFuture<List<FilteredText>> processMessageBundle(List<String> list) {
-        return CompletableFuture.supplyAsync(() -> {
-            ObjectArrayList<FilteredText> filtered = new ObjectArrayList<>(list.size());
-            for (String input : list) {
-                filtered.add(new FilteredText(input, this.parseMask(input)));
-            }
-
-            return filtered;
-        });
+        if (Filter.isEnabled()) {
+            return CompletableFuture.supplyAsync(() -> Util.map(list, this::filter));
+        } else {
+            return CompletableFuture.completedFuture(Util.map(list, FilteredText::passThrough));
+        }
     }
 
-    private FilterMask parseMask(String input) {
-        Config.Filter filter = Config.instance().filter;
-        if (!filter.enabled || filter.filteredWords.length == 0) {
-            return FilterMask.PASS_THROUGH;
-        }
+    private FilteredText filter(String input) {
+        FilteredText text = Filter.process(input);
 
-        BitSet filtered = new BitSet(input.length());
-        for (String word : filter.filteredWords) {
-            final int startIndex = StringUtils.indexOfIgnoreCase(input, word);
-            for (int curr = startIndex; curr != StringUtils.INDEX_NOT_FOUND; curr = StringUtils.indexOfIgnoreCase(input, word, curr)) {
-                filtered.set(curr, curr += word.length());
-            }
-        }
-
-        if (!filtered.isEmpty()) {
+        if (text.isFiltered()) {
             AdvancedChatEvents.MESSAGE_FILTERED.invoker().onMessageFiltered(this.player, input);
-            if (filter.logFilteredMessages) {
+            if (Config.instance().filter.logFilteredMessages) {
                 AdvancedChat.getLogger().info("[AdvancedChat] Filtered text from {}: {}", this.player.getScoreboardName(), input);
             }
-
-            return FilterMaskInvoker.newMask(filtered);
         }
 
-        return FilterMask.PASS_THROUGH;
+        return text;
     }
 
-    public static String filterStyledChat(String input) {
+    public static boolean isEnabled() {
         Config.Filter filter = Config.instance().filter;
-        if (!filter.enabled || filter.filteredWords.length == 0) {
-            return input;
+        return filter.enabled && filter.filteredWords.length > 0;
+    }
+
+    public static FilteredText process(String input) {
+        BitSet mask = new BitSet(input.length());
+        for (String word : Config.instance().filter.filteredWords) {
+            final int start = StringUtils.indexOfIgnoreCase(input, word);
+            for (int curr = start; curr != StringUtils.INDEX_NOT_FOUND; curr = StringUtils.indexOfIgnoreCase(input, word, curr)) {
+                mask.set(curr, curr += word.length());
+            }
         }
 
-        String filtered = input;
-        for (String word : filter.filteredWords) {
-            filtered = StringUtils.replaceIgnoreCase(filtered, word, "#".repeat(word.length()));
-        }
-
-        return filtered;
+        return new FilteredText(input, mask.isEmpty() ? FilterMask.PASS_THROUGH : FilterMaskInvoker.newMask(mask));
     }
 }

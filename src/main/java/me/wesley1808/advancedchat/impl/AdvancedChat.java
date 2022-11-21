@@ -46,7 +46,7 @@ public class AdvancedChat implements ModInitializer {
 
         if (ModCompat.STYLEDCHAT) {
             StyledChatEvents.PRE_MESSAGE_CONTENT.register((message, context) -> {
-                return context.hasPlayer() ? Filter.filterStyledChat(message) : message;
+                return context.hasPlayer() && Filter.isEnabled() ? Filter.process(message).filteredOrEmpty() : message;
             });
         }
     }

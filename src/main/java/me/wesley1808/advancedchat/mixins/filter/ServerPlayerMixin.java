@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.TextFilter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
@@ -33,7 +34,12 @@ public class ServerPlayerMixin {
                     target = "Lnet/minecraft/network/protocol/game/ServerboundClientInformationPacket;textFilteringEnabled()Z"
             )
     )
-    private boolean forceTextFiltering(boolean original) {
-        return original || Config.instance().filter.forceTextFiltering;
+    private boolean advancedchat$forceTextFiltering(boolean textFilteringEnabled) {
+        return textFilteringEnabled || Config.instance().filter.forceTextFiltering;
+    }
+
+    @ModifyVariable(method = "sendChatMessage", index = 2, argsOnly = true, at = @At("HEAD"))
+    private boolean advancedchat$forceChatFiltering(boolean shouldFilter) {
+        return shouldFilter || Config.instance().filter.forceTextFiltering;
     }
 }

@@ -117,7 +117,6 @@ The configuration file can be found at `/config/advancedchat.json`
     "enabled": false,
     // By default, messages will only be sent as filtered to a client if they have text filtering enabled.
     // Setting this to true will make it filter messages regardless of the client's settings.
-    // Note: Vanilla doesn't filter messages if the sender is also the receiver, so your own messages won't appear filtered to you. 
     "forceTextFiltering": false,
     // If enabled, logs whenever a message gets filtered in the server logs.
     "logFilteredMessages": true,
