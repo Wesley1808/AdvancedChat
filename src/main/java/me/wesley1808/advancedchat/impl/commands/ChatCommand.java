@@ -92,6 +92,7 @@ public class ChatCommand {
             player.server.getPlayerList().broadcastChatMessage(message, player, bound);
             data.channel = original;
         });
+
         return Command.SINGLE_SUCCESS;
     }
 

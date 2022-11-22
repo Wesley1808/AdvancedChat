@@ -12,6 +12,8 @@ import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Optional;
+
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.arguments.GameProfileArgument.gameProfile;
@@ -67,9 +69,10 @@ public class IgnoreCommand {
         return (ctx, builder) -> {
             CommandSourceStack source = ctx.getSource();
             AdvancedChatData data = DataManager.get(source.getPlayerOrException());
-            return Util.suggest(builder, Util.map(data.ignored,
-                    (uuid) -> source.getServer().getProfileCache().get(uuid).map(GameProfile::getName).orElse(null)
-            ));
+            return Util.suggest(builder, Util.map(data.ignored, (uuid) -> {
+                Optional<GameProfile> profile = source.getServer().getProfileCache().get(uuid);
+                return profile.map(GameProfile::getName).orElse(null);
+            }));
         };
     }
 }

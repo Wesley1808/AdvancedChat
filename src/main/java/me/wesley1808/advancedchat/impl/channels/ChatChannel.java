@@ -41,10 +41,6 @@ public class ChatChannel {
         return this.hasPermission(player);
     }
 
-    public boolean hasPermission(ServerPlayer player) {
-        return this.permission == null || Permission.check(player, this.permission, 2);
-    }
-
     public boolean canSee(ServerPlayer sender, ServerPlayer target) {
         if (!this.hasPermission(target)) {
             return false;
@@ -56,6 +52,10 @@ public class ChatChannel {
 
         PredicateContext context = AbstractChatPredicate.createContext(sender, target);
         return this.canSee.test(context).success();
+    }
+
+    private boolean hasPermission(ServerPlayer player) {
+        return this.permission == null || Permission.check(player, this.permission, 2);
     }
 
     @Nullable
