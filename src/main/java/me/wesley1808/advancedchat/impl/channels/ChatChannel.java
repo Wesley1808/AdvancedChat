@@ -7,6 +7,7 @@ import eu.pb4.predicate.api.PredicateContext;
 import me.wesley1808.advancedchat.api.AbstractChatPredicate;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Permission;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,12 @@ public class ChatChannel {
         return channel == null || !channel.isStaff;
     }
 
-    public boolean canPlayerUse(ServerPlayer player) {
+    public boolean canUse(CommandSourceStack source) {
+        ServerPlayer player = source.getPlayer();
+        return player != null && this.canUse(player);
+    }
+
+    public boolean canUse(ServerPlayer player) {
         if (!this.enabled) {
             return false;
         }

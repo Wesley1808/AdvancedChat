@@ -36,7 +36,7 @@ public class AdvancedChatCommands {
             AdvancedChatData data = DataManager.get(player);
             String prevName = data.channel != null ? data.channel.name : null;
             ChatChannel channel = Channels.get(prevName);
-            if (channel != null && channel.canPlayerUse(player)) {
+            if (channel != null && channel.canUse(player)) {
                 data.channel = channel;
             } else {
                 data.channel = null;

@@ -58,7 +58,7 @@ public class ChatCommand {
 
     private static int switchChannel(ServerPlayer player, String name, boolean isGlobal) {
         ChatChannel channel = isGlobal ? null : Channels.get(name);
-        if (!isGlobal && (channel == null || !channel.canPlayerUse(player))) {
+        if (!isGlobal && (channel == null || !channel.canUse(player))) {
             player.sendSystemMessage(Formatter.parse(Config.instance().messages.channelNotFound.replace("${name}", name)));
             return 0;
         }
@@ -69,22 +69,23 @@ public class ChatCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int sendInChannel(CommandContext<CommandSourceStack> ctx, String name, boolean isGlobal) throws CommandSyntaxException {
-        ServerPlayer player = ctx.getSource().getPlayerOrException();
+    private static int sendInChannel(CommandContext<CommandSourceStack> context, String name, boolean isGlobal) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource();
+        ServerPlayer player = source.getPlayerOrException();
         ChatChannel channel = isGlobal ? null : Channels.get(name);
-        if (!isGlobal && (channel == null || !channel.canPlayerUse(player))) {
+        if (!isGlobal && (channel == null || !channel.canUse(player))) {
             player.sendSystemMessage(Formatter.parse(Config.instance().messages.channelNotFound.replace("${name}", name)));
             return 0;
         }
 
-        MessageArgument.resolveChatMessage(ctx, MESSAGE_KEY, (message) -> {
+        MessageArgument.resolveChatMessage(context, MESSAGE_KEY, (message) -> {
             AdvancedChatData data = DataManager.get(player);
             ChatChannel original = data.channel;
             data.channel = channel;
 
             if (ModCompat.STYLEDCHAT) {
                 // StyledChat support
-                StyledChatUtils.modifyForSending(message, ctx.getSource(), ChatType.CHAT);
+                StyledChatUtils.modifyForSending(message, source, ChatType.CHAT);
             }
 
             MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(player);
@@ -98,10 +99,9 @@ public class ChatCommand {
 
     private static SuggestionProvider<CommandSourceStack> availableChannels() {
         return (ctx, builder) -> {
-            ServerPlayer source = ctx.getSource().getPlayerOrException();
             List<String> channels = new ObjectArrayList<>();
             Channels.getAll().forEach((name, channel) -> {
-                if (channel.canPlayerUse(source)) {
+                if (channel.canUse(ctx.getSource())) {
                     channels.add(name);
                 }
             });

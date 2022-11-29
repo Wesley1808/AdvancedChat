@@ -61,7 +61,7 @@ public class Socialspy {
 
         Socialspy.send(sender.server, text, (player) -> {
             Socialspy.Mode mode = DataManager.get(player).spyMode;
-            return mode.acceptsChannel() && channel.canPlayerUse(player) && !receivers.contains(player);
+            return mode.acceptsChannel() && channel.canUse(player) && !receivers.contains(player);
         });
     }
 
