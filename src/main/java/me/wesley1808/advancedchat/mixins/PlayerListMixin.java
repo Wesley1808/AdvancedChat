@@ -1,6 +1,7 @@
 package me.wesley1808.advancedchat.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.utils.Socialspy;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.network.chat.ChatType;
@@ -34,6 +35,7 @@ public class PlayerListMixin {
         List<ServerPlayer> players = sender != null ? Util.filterIgnored(sender) : original;
         if (sender != null && Util.isChat(this.server, bound.chatType())) {
             List<ServerPlayer> receivers = Util.filterByChannel(sender, players);
+            Util.playSound(sender, receivers, Config.instance().channelMessageSound);
             Socialspy.send(sender, receivers, message);
             return receivers;
         }

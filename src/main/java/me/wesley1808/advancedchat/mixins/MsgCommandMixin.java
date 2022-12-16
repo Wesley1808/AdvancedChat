@@ -2,6 +2,7 @@ package me.wesley1808.advancedchat.mixins;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import me.wesley1808.advancedchat.impl.utils.Socialspy;
 import me.wesley1808.advancedchat.impl.utils.Util;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 @Mixin(MsgCommand.class)
 public class MsgCommandMixin {
@@ -45,11 +47,12 @@ public class MsgCommandMixin {
             )
     )
     private static void advancedchat$onSendMessage(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci, ChatType.Bound bound, OutgoingChatMessage outgoingChatMessage, boolean bl, Iterator<?> var6, ServerPlayer target, ChatType.Bound bound2) {
-        ServerPlayer player = source.getPlayer();
-        if (player != null) {
+        ServerPlayer sender = source.getPlayer();
+        if (sender != null) {
+            Util.playSound(sender, List.of(target), Config.instance().privateMessageSound);
             Socialspy.send(source, target, message);
-            IServerPlayer.setReplyTarget(player, target.getUUID());
-            IServerPlayer.setReplyTarget(target, player.getUUID());
+            IServerPlayer.setReplyTarget(sender, target.getUUID());
+            IServerPlayer.setReplyTarget(target, sender.getUUID());
         }
     }
 }

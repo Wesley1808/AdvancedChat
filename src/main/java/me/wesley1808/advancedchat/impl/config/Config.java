@@ -4,6 +4,8 @@ import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.predicates.CustomDistancePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 
 public class Config {
     protected static Config instance = new Config();
@@ -18,6 +20,8 @@ public class Config {
     public Messages messages = new Messages();
     public Socialspy socialSpy = new Socialspy();
     public Filter filter = new Filter();
+    public Sound channelMessageSound = new Sound();
+    public Sound privateMessageSound = new Sound();
 
     public ChatChannel[] channels = {
             new ChatChannel(
@@ -70,6 +74,13 @@ public class Config {
         public boolean forceTextFiltering = false;
         public boolean logFilteredMessages = true;
         public String[] filteredWords = {};
+    }
+
+    public static class Sound {
+        public boolean enabled = false;
+        public SoundEvent sound = SoundEvents.NOTE_BLOCK_BELL.value();
+        public float volume = 0.5F;
+        public float pitch = 0.6F;
     }
 
     public static class Messages {

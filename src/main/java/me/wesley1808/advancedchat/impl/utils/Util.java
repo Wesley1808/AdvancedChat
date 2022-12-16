@@ -15,15 +15,20 @@ import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
@@ -144,6 +149,28 @@ public class Util {
                 AdvancedChatData data = DataManager.get(target);
                 if (data.ignored.contains(sender.getUUID())) {
                     throw new SimpleCommandExceptionType(Formatter.parse(Config.instance().messages.ignored.replace("${player}", target.getScoreboardName()))).create();
+                }
+            }
+        }
+    }
+
+    public static void playSound(ServerPlayer sender, Collection<ServerPlayer> targets, Config.Sound config) {
+        if (config.enabled && config.sound != null) {
+            Holder<SoundEvent> sound = BuiltInRegistries.SOUND_EVENT.wrapAsHolder(config.sound);
+            long seed = sender.getLevel().getRandom().nextLong();
+
+            for (ServerPlayer target : targets) {
+                if (sender != target) {
+                    target.connection.send(new ClientboundSoundPacket(
+                            sound,
+                            SoundSource.RECORDS,
+                            target.getX(),
+                            target.getY(),
+                            target.getZ(),
+                            config.volume,
+                            config.pitch,
+                            seed
+                    ));
                 }
             }
         }

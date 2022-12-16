@@ -23,9 +23,21 @@ public class AdvancedChatCommands {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("advancedchat");
         builder.then(literal("reload")
                 .requires(Permission.require(Permission.RELOAD, 2))
-                .executes(ctx -> reload(ctx.getSource())));
+                .executes(ctx -> reload(ctx.getSource()))
+        );
+
+        builder.then(literal("save")
+                .requires(Permission.require(Permission.RELOAD, 2))
+                .executes(ctx -> save(ctx.getSource()))
+        );
 
         dispatcher.register(builder);
+    }
+
+    private static int save(CommandSourceStack source) {
+        ConfigManager.save();
+        source.sendSystemMessage(Component.literal("Saved config!").withStyle(ChatFormatting.GREEN));
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int reload(CommandSourceStack source) {

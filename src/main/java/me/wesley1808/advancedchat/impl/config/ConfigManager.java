@@ -28,7 +28,7 @@ public class ConfigManager {
         }
     }
 
-    private static void save() {
+    public static void save() {
         try (BufferedWriter writer = getWriter(CONFIG)) {
             writer.write(Json.CONFIG.toJson(Config.instance));
         } catch (Exception ex) {
