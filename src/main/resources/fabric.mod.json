@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "advancedchat",
+  "id": "advanced-chat",
   "version": "${version}",
   "name": "Advanced Chat",
   "description": "A fabric mod that adds a bunch of useful multiplayer chat features to the game.",
@@ -24,7 +24,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.14.10",
-    "minecraft": ">=1.19.2"
+    "minecraft": ">=1.19.3"
   },
   "suggests": {
     "styledchat": "*"
