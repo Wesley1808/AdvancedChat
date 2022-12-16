@@ -1,4 +1,4 @@
-package me.wesley1808.advancedchat.mixins.filter;
+package me.wesley1808.advancedchat.mixins.accessors;
 
 import net.minecraft.network.chat.FilterMask;
 import org.spongepowered.asm.mixin.Mixin;

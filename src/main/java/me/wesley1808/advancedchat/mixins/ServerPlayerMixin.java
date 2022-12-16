@@ -22,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.UUID;
+
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player implements IServerPlayer {
     @Shadow
@@ -29,6 +31,9 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     @Unique
     @Nullable
     private ClientboundSetActionBarTextPacket actionBarPacket;
+    @Unique
+    @Nullable
+    private UUID replyTarget;
 
     public ServerPlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(level, blockPos, f, gameProfile);
@@ -63,5 +68,16 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         }
 
         this.actionBarPacket = new ClientboundSetActionBarTextPacket(data.channel.getActionBarText(player));
+    }
+
+    @Override
+    public void setReplyTarget(@Nullable UUID uuid) {
+        this.replyTarget = uuid;
+    }
+
+    @Nullable
+    @Override
+    public UUID getReplyTarget() {
+        return this.replyTarget;
     }
 }

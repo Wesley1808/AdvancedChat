@@ -8,8 +8,8 @@ import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.ConfigManager;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
+import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import me.wesley1808.advancedchat.impl.utils.Permission;
-import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -42,7 +42,7 @@ public class AdvancedChatCommands {
                 data.channel = null;
             }
 
-            Util.resetActionBarPacket(player);
+            IServerPlayer.resetActionBarPacket(player);
         }
 
         source.sendSystemMessage(Component.literal("Reloaded config!").withStyle(ChatFormatting.GREEN));

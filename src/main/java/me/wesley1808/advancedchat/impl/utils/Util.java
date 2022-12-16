@@ -13,7 +13,6 @@ import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
-import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.core.Registry;
@@ -122,10 +121,6 @@ public class Util {
         }
 
         return filtered;
-    }
-
-    public static void resetActionBarPacket(ServerPlayer player) {
-        ((IServerPlayer) player).resetActionBarPacket();
     }
 
     public static boolean isChat(MinecraftServer server, ChatType type) {

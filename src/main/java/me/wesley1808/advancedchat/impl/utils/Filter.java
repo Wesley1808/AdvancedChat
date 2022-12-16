@@ -3,12 +3,13 @@ package me.wesley1808.advancedchat.impl.utils;
 import me.wesley1808.advancedchat.api.AdvancedChatEvents;
 import me.wesley1808.advancedchat.impl.AdvancedChat;
 import me.wesley1808.advancedchat.impl.config.Config;
-import me.wesley1808.advancedchat.mixins.filter.FilterMaskInvoker;
+import me.wesley1808.advancedchat.mixins.accessors.FilterMaskInvoker;
 import net.minecraft.network.chat.FilterMask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.FilteredText;
 import net.minecraft.server.network.TextFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.BitSet;
 import java.util.List;
@@ -29,6 +30,7 @@ public class Filter implements TextFilter {
     public void leave() {
     }
 
+    @NotNull
     @Override
     public CompletableFuture<FilteredText> processStreamMessage(String input) {
         if (Filter.isEnabled()) {
@@ -38,6 +40,7 @@ public class Filter implements TextFilter {
         }
     }
 
+    @NotNull
     @Override
     public CompletableFuture<List<FilteredText>> processMessageBundle(List<String> list) {
         if (Filter.isEnabled()) {

@@ -9,7 +9,8 @@
     "ServerGamePacketListenerImplMixin",
     "ServerMessageEventsMixin",
     "ServerPlayerMixin",
-    "filter.FilterMaskInvoker",
+    "accessors.FilterMaskInvoker",
+    "accessors.MsgCommandInvoker",
     "filter.MessageArgumentMixin",
     "filter.ServerPlayerMixin"
   ],

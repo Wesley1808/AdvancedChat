@@ -2,6 +2,7 @@ package me.wesley1808.advancedchat.mixins;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import me.wesley1808.advancedchat.impl.utils.Socialspy;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
@@ -43,9 +44,12 @@ public class MsgCommandMixin {
                     target = "Lnet/minecraft/commands/CommandSourceStack;shouldFilterMessageTo(Lnet/minecraft/server/level/ServerPlayer;)Z"
             )
     )
-    private static void advancedchat$sendSocialSpy(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci, ChatType.Bound bound, OutgoingChatMessage outgoingChatMessage, boolean bl, Iterator<?> var6, ServerPlayer target, ChatType.Bound bound2) {
-        if (source.isPlayer()) {
+    private static void advancedchat$onSendMessage(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci, ChatType.Bound bound, OutgoingChatMessage outgoingChatMessage, boolean bl, Iterator<?> var6, ServerPlayer target, ChatType.Bound bound2) {
+        ServerPlayer player = source.getPlayer();
+        if (player != null) {
             Socialspy.send(source, target, message);
+            IServerPlayer.setReplyTarget(player, target.getUUID());
+            IServerPlayer.setReplyTarget(target, player.getUUID());
         }
     }
 }

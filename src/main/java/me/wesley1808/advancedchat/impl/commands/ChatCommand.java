@@ -14,6 +14,7 @@ import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
+import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.ModCompat;
 import me.wesley1808.advancedchat.impl.utils.Util;
@@ -65,7 +66,7 @@ public class ChatCommand {
 
         player.sendSystemMessage(Formatter.parse(Config.instance().messages.switchedChannels.replace("${channel}", StringUtils.capitalize(name))));
         DataManager.get(player).channel = channel;
-        Util.resetActionBarPacket(player);
+        IServerPlayer.resetActionBarPacket(player);
         return Command.SINGLE_SUCCESS;
     }
 

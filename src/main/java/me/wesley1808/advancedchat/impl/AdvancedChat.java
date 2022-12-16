@@ -3,10 +3,7 @@ package me.wesley1808.advancedchat.impl;
 import com.mojang.logging.LogUtils;
 import eu.pb4.styledchat.StyledChatEvents;
 import me.wesley1808.advancedchat.impl.channels.Channels;
-import me.wesley1808.advancedchat.impl.commands.AdvancedChatCommands;
-import me.wesley1808.advancedchat.impl.commands.ChatCommand;
-import me.wesley1808.advancedchat.impl.commands.IgnoreCommand;
-import me.wesley1808.advancedchat.impl.commands.SocialspyCommand;
+import me.wesley1808.advancedchat.impl.commands.*;
 import me.wesley1808.advancedchat.impl.config.ConfigManager;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.predicates.Predicates;
@@ -42,6 +39,7 @@ public class AdvancedChat implements ModInitializer {
             ChatCommand.register(dispatcher);
             IgnoreCommand.register(dispatcher);
             SocialspyCommand.register(dispatcher);
+            ReplyCommand.register(dispatcher);
         });
 
         if (ModCompat.STYLEDCHAT) {
