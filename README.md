@@ -48,11 +48,13 @@ It adds a new placeholder that mods overriding chat like styled-chat can use: `%
 
 ### Commands
 
-- `/advancedchat reload` - Reloads the configuration file and all the chat channels.
+- `/advancedchat save | reload` - Saves / Reloads the configuration file and all the chat channels.
 
 - `/chat <channel>` - Lets you switch between chat channels that are availabe to you.
 
 - `/chat <channel> <message>` - Lets you send a message in the specified channel, without switching.
+
+- `/reply <message> | /r <message>` - Sends a private message to the last player you messaged.
 
 - `/ignore <player> | /unignore <player>` - Ignores / Unignores the specified player.
 
@@ -125,6 +127,18 @@ The configuration file can be found at `/config/advancedchat.json`
       "bad-word",
       "bad-word-2"
     ]
+  },
+
+  // Sound configuration for when a player receives a private message.
+  // There is also one of these for when a player receives a message from a channel.
+  "privateMessageSound": {
+    // Decides if it should play sounds for these messages.
+    "enabled": false,
+    // The identifier of the sound event.
+    "sound": "minecraft:block.note_block.bell",
+    // The volume and pitch of the sound event.
+    "volume": 0.5,
+    "pitch": 0.6
   },
 
   // An array of chat channels.
