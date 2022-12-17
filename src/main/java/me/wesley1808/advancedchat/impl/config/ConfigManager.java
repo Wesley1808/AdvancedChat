@@ -11,10 +11,9 @@ import java.nio.charset.StandardCharsets;
 public class ConfigManager {
     private static final File CONFIG = new File(FabricLoader.getInstance().getConfigDir().toFile(), "advanced-chat.json");
 
-    public static void load() {
+    public static String load() {
         if (!CONFIG.exists()) {
-            save();
-            return;
+            return ConfigManager.save();
         }
 
         try (BufferedReader reader = getReader(CONFIG)) {
@@ -23,16 +22,20 @@ public class ConfigManager {
             for (ChatChannel channel : Config.instance.channels) {
                 channel.name = channel.name.toLowerCase().replace(" ", "");
             }
-        } catch (Exception ex) {
-            AdvancedChat.getLogger().error("Failed to load config!", ex);
+            return null;
+        } catch (Throwable throwable) {
+            AdvancedChat.getLogger().error("Failed to load config!", throwable);
+            return throwable.toString();
         }
     }
 
-    public static void save() {
+    public static String save() {
         try (BufferedWriter writer = getWriter(CONFIG)) {
             writer.write(Json.CONFIG.toJson(Config.instance));
-        } catch (Exception ex) {
-            AdvancedChat.getLogger().error("Failed to save config!", ex);
+            return null;
+        } catch (Throwable throwable) {
+            AdvancedChat.getLogger().error("Failed to save config!", throwable);
+            return throwable.toString();
         }
     }
 

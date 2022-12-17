@@ -13,6 +13,8 @@ import me.wesley1808.advancedchat.impl.utils.Permission;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 import static net.minecraft.commands.Commands.literal;
@@ -35,29 +37,43 @@ public class AdvancedChatCommands {
     }
 
     private static int save(CommandSourceStack source) {
-        ConfigManager.save();
-        source.sendSystemMessage(Component.literal("Saved config!").withStyle(ChatFormatting.GREEN));
-        return Command.SINGLE_SUCCESS;
+        String error = ConfigManager.save();
+        if (error != null) {
+            MutableComponent component = Component.literal("Failed to save config!");
+            component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(error))));
+            source.sendFailure(component);
+            return 0;
+        } else {
+            source.sendSystemMessage(Component.literal("Saved config!").withStyle(ChatFormatting.GREEN));
+            return Command.SINGLE_SUCCESS;
+        }
     }
 
     private static int reload(CommandSourceStack source) {
-        ConfigManager.load();
-        Channels.register();
+        String error = ConfigManager.load();
+        if (error != null) {
+            MutableComponent component = Component.literal("Failed to reload config!");
+            component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(error))));
+            source.sendFailure(component);
+            return 0;
+        } else {
+            source.sendSystemMessage(Component.literal("Reloaded config!").withStyle(ChatFormatting.GREEN));
+            Channels.register();
 
-        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
-            AdvancedChatData data = DataManager.get(player);
-            String prevName = data.channel != null ? data.channel.name : null;
-            ChatChannel channel = Channels.get(prevName);
-            if (channel != null && channel.canUse(player)) {
-                data.channel = channel;
-            } else {
-                data.channel = null;
+            for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+                AdvancedChatData data = DataManager.get(player);
+                String prevName = data.channel != null ? data.channel.name : null;
+                ChatChannel channel = Channels.get(prevName);
+                if (channel != null && channel.canUse(player)) {
+                    data.channel = channel;
+                } else {
+                    data.channel = null;
+                }
+
+                IServerPlayer.resetActionBarPacket(player);
             }
 
-            IServerPlayer.resetActionBarPacket(player);
+            return Command.SINGLE_SUCCESS;
         }
-
-        source.sendSystemMessage(Component.literal("Reloaded config!").withStyle(ChatFormatting.GREEN));
-        return Command.SINGLE_SUCCESS;
     }
 }
