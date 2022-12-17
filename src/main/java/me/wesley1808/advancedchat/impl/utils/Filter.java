@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.BitSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Filter implements TextFilter {
     private final ServerPlayer player;
@@ -64,13 +66,22 @@ public class Filter implements TextFilter {
     }
 
     public static boolean isEnabled() {
-        Config.Filter filter = Config.instance().filter;
-        return filter.enabled && filter.filteredWords.length > 0;
+        Config.Filter config = Config.instance().filter;
+        return config.enabled && (config.filteredWords.length > 0 || config.regexFilterPatterns.length > 0);
     }
 
     public static FilteredText process(String input) {
+        Config.Filter config = Config.instance().filter;
         BitSet mask = new BitSet(input.length());
-        for (String word : Config.instance().filter.filteredWords) {
+
+        for (Pattern pattern : config.regexFilterPatterns) {
+            Matcher matcher = pattern.matcher(input);
+            while (matcher.find()) {
+                mask.set(matcher.start(), matcher.end());
+            }
+        }
+
+        for (String word : config.filteredWords) {
             final int start = StringUtils.indexOfIgnoreCase(input, word);
             for (int curr = start; curr != StringUtils.INDEX_NOT_FOUND; curr = StringUtils.indexOfIgnoreCase(input, word, curr)) {
                 mask.set(curr, curr += word.length());

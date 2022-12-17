@@ -7,6 +7,8 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
+import java.util.regex.Pattern;
+
 public class Config {
     protected static Config instance = new Config();
 
@@ -74,6 +76,7 @@ public class Config {
         public boolean forceTextFiltering = false;
         public boolean logFilteredMessages = true;
         public String[] filteredWords = {};
+        public Pattern[] regexFilterPatterns = {};
     }
 
     public static class Sound {

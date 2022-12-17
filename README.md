@@ -50,7 +50,7 @@ It adds a new placeholder that mods overriding chat like styled-chat can use: `%
 
 - `/advancedchat save | reload` - Saves / Reloads the configuration file and all the chat channels.
 
-- `/chat <channel>` - Lets you switch between chat channels that are availabe to you.
+- `/chat <channel>` - Lets you switch between chat channels that are available to you.
 
 - `/chat <channel> <message>` - Lets you send a message in the specified channel, without switching.
 
@@ -126,7 +126,9 @@ The configuration file can be found at `/config/advancedchat.json`
     "filteredWords": [
       "bad-word",
       "bad-word-2"
-    ]
+    ],
+    // Regular expression patterns that should be filtered.
+    "regexFilterPatterns": [],
   },
 
   // Sound configuration for when a player receives a private message.

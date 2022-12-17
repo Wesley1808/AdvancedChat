@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 import java.lang.reflect.Type;
+import java.util.regex.Pattern;
 
 public class Json {
     public static final Gson PLAYER_DATA = new GsonBuilder()
@@ -20,11 +21,28 @@ public class Json {
             .create();
 
     public static final Gson CONFIG = new GsonBuilder()
+            .registerTypeHierarchyAdapter(Pattern.class, new PatternSerializer())
             .registerTypeHierarchyAdapter(MinecraftPredicate.class, GsonPredicateSerializer.INSTANCE)
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistrySerializer<>(BuiltInRegistries.SOUND_EVENT))
             .disableHtmlEscaping()
             .setPrettyPrinting()
             .create();
+
+    private static class PatternSerializer implements JsonSerializer<Pattern>, JsonDeserializer<Pattern> {
+
+        @Override
+        public Pattern deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            if (json.isJsonPrimitive()) {
+                return Pattern.compile(json.getAsString(), Pattern.CASE_INSENSITIVE);
+            }
+            return null;
+        }
+
+        @Override
+        public JsonElement serialize(Pattern pattern, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(pattern.pattern());
+        }
+    }
 
     private static class ChannelSerializer implements JsonSerializer<ChatChannel>, JsonDeserializer<ChatChannel> {
 

@@ -14,6 +14,6 @@ import java.util.Collection;
 public interface MsgCommandInvoker {
 
     @Invoker("sendMessage")
-    static void sendMessage(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message) {
+    static void invokeSendMessage(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message) {
     }
 }

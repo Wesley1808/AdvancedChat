@@ -19,7 +19,7 @@ import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.arguments.MessageArgument.message;
 
-public final class ReplyCommand {
+public class ReplyCommand {
     private static final String MESSAGE_KEY = "message";
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -42,7 +42,7 @@ public final class ReplyCommand {
         }
 
         MessageArgument.resolveChatMessage(context, MESSAGE_KEY, (message) -> {
-            MsgCommandInvoker.sendMessage(context.getSource(), List.of(target), message);
+            MsgCommandInvoker.invokeSendMessage(context.getSource(), List.of(target), message);
         });
 
         return Command.SINGLE_SUCCESS;
