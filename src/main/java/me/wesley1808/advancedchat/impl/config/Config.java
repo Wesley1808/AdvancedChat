@@ -14,7 +14,7 @@ public class Config {
 
     public String comment = "Before changing anything, see https://github.com/Wesley1808/AdvancedChat#configuration";
     public boolean actionbar = true;
-    public int actionbarRefreshRate = 40;
+    public int actionbarUpdateInterval = 40;
     public boolean alwaysTriggerMessageEvent = false;
     public String hoverText = "<dark_aqua>Receivers: <dark_gray>[${receivers}]</dark_gray>";
     public String receiver = "<green>${player}</green>";

@@ -5,13 +5,13 @@ import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
-import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
@@ -34,6 +35,8 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     @Unique
     @Nullable
     private UUID replyTarget;
+    @Unique
+    private long nextPacketTime;
 
     public ServerPlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(level, blockPos, f, gameProfile);
@@ -44,30 +47,40 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         this.resetActionBarPacket();
     }
 
+    @Inject(method = "startRiding", at = @At(value = "RETURN", ordinal = 1))
+    private void advancedchat$onStartRiding(Entity vehicle, boolean force, CallbackInfoReturnable<Boolean> cir) {
+        // Prevents the channel overlay packets from overriding the vehicle mount overlay.
+        this.delayNextPacket();
+    }
+
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void advancedchat$onTick(CallbackInfo ci) {
         Config config = Config.instance();
         if (config.actionbar) {
-            if (this.tickCount % config.actionbarRefreshRate == 0) {
+            if (this.tickCount % config.actionbarUpdateInterval == 0) {
                 this.resetActionBarPacket();
             }
 
             if (this.actionBarPacket != null) {
-                this.connection.send(this.actionBarPacket);
+                long time = System.currentTimeMillis();
+                if (this.nextPacketTime <= time) {
+                    this.connection.send(this.actionBarPacket);
+                    this.nextPacketTime = time + 1000;
+                }
             }
         }
     }
 
+    @Nullable
     @Override
-    public void resetActionBarPacket() {
-        ServerPlayer player = (ServerPlayer) (Object) this;
-        AdvancedChatData data = DataManager.get(player);
-        if (Util.isVanished(player) || data.channel == null) {
-            this.actionBarPacket = null;
-            return;
-        }
+    public ClientboundSetActionBarTextPacket getActionBarPacket() {
+        return this.actionBarPacket;
+    }
 
-        this.actionBarPacket = new ClientboundSetActionBarTextPacket(data.channel.getActionBarText(player));
+    @Nullable
+    @Override
+    public UUID getReplyTarget() {
+        return this.replyTarget;
     }
 
     @Override
@@ -75,9 +88,20 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         this.replyTarget = uuid;
     }
 
-    @Nullable
     @Override
-    public UUID getReplyTarget() {
-        return this.replyTarget;
+    public void delayNextPacket() {
+        this.nextPacketTime = System.currentTimeMillis() + 3000;
+    }
+
+    @Override
+    public void resetActionBarPacket() {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        AdvancedChatData data = DataManager.get(player);
+        if (data.channel == null) {
+            this.actionBarPacket = null;
+            return;
+        }
+
+        this.actionBarPacket = new ClientboundSetActionBarTextPacket(data.channel.getActionBarText(player));
     }
 }

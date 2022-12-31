@@ -23,7 +23,10 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -174,6 +177,11 @@ public class Util {
                 }
             }
         }
+    }
+
+    public static boolean isOverlayPacket(Packet<?> packet) {
+        return packet instanceof ClientboundSetActionBarTextPacket ||
+               packet instanceof ClientboundSystemChatPacket chatPacket && chatPacket.overlay();
     }
 
     public static <T, R> List<R> map(Collection<T> collection, Function<T, R> function) {

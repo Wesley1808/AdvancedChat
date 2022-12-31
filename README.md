@@ -79,7 +79,7 @@ The configuration file can be found at `/config/advancedchat.json`
   // Decides if channels should display action bars.
   "actionbar": true,
   // Ticks between action bar updates. Very high values may cause the actionbar to lag behind in certain situations.
-  "actionbarRefreshRate": 40,
+  "actionbarUpdateInterval": 40,
   // If set to false, advancedchat will cancel ServerMessageEvents.CHAT_MESSAGE if the message was sent through a chat channel.
   // This may help prevent some mods like discord-bridges sending (private) channel messages in a public discord channel.
   "alwaysTriggerMessageEvent": false,
@@ -87,6 +87,8 @@ The configuration file can be found at `/config/advancedchat.json`
   // This excludes players who are either vanished or in spectator.
   "hoverText": "<dark_aqua>Receivers: <dark_gray>[${receivers}]</dark_gray>",
   "receiver": "<green>${player}</green>",
+  // Fallback prefix of a channel only the sender can see.
+  // Currently only used for vanished players, when they type in a channel that isn't marked with "isStaff".
   "selfPrefix": "<dark_gray>[<aqua>Self</aqua>]</dark_gray> ",
 
   // Command feedback messages.
