@@ -111,19 +111,27 @@ public class Util {
         return filtered;
     }
 
-    public static List<ServerPlayer> filterIgnored(ServerPlayer sender, Collection<ServerPlayer> players) {
-        boolean bypassesIgnore = Permission.check(sender, Permission.BYPASS_IGNORE, 2);
-        AdvancedChatData senderData = DataManager.get(sender);
-
-        if (senderData.hasMuted(senderData.channel)) {
+    public static boolean canSendChatMessage(ServerPlayer sender, boolean isGlobal) {
+        AdvancedChatData data = DataManager.get(sender);
+        if (data.hasMuted(isGlobal ? null : data.channel)) {
             sender.sendSystemMessage(Formatter.parse(Config.instance().messages.channelMuted));
-            return new ObjectArrayList<>(0);
+            return false;
+        }
+        return true;
+    }
+
+    public static List<ServerPlayer> filterIgnored(ServerPlayer sender, Collection<ServerPlayer> players) {
+        // Return all players if the sender has bypass permissions.
+        if (Permission.check(sender, Permission.BYPASS_IGNORE, 2)) {
+            return new ObjectArrayList<>(players);
         }
 
         ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
+        ChatChannel channel = DataManager.get(sender).channel;
+
         for (ServerPlayer target : players) {
             AdvancedChatData data = DataManager.get(target);
-            if (!data.hasMuted(senderData.channel) && (bypassesIgnore || !data.isIgnoring(sender))) {
+            if (!data.hasMuted(channel) && !data.isIgnoring(sender)) {
                 filtered.add(target);
             }
         }

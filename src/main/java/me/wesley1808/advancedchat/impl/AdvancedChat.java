@@ -10,9 +10,12 @@ import me.wesley1808.advancedchat.impl.predicates.Predicates;
 import me.wesley1808.advancedchat.impl.utils.Filter;
 import me.wesley1808.advancedchat.impl.utils.ModCompat;
 import me.wesley1808.advancedchat.impl.utils.PlaceHolders;
+import me.wesley1808.advancedchat.impl.utils.Util;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
+import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 
 public class AdvancedChat implements ModInitializer {
@@ -40,6 +43,13 @@ public class AdvancedChat implements ModInitializer {
             IgnoreCommand.register(dispatcher);
             SocialspyCommand.register(dispatcher);
             ReplyCommand.register(dispatcher);
+        });
+
+        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, chatType) -> Util.canSendChatMessage(sender, false));
+
+        ServerMessageEvents.ALLOW_COMMAND_MESSAGE.register((message, source, chatType) -> {
+            ServerPlayer sender = source.getPlayer();
+            return sender == null || Util.canSendChatMessage(sender, true);
         });
 
         if (ModCompat.STYLEDCHAT) {
