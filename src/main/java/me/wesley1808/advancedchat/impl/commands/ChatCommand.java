@@ -41,6 +41,9 @@ public class ChatCommand {
 
         builder.then(literal("global")
                 .executes(ctx -> switchChannel(ctx.getSource().getPlayerOrException(), "global", true))
+                .then(literal("toggle")
+                        .executes(ctx -> toggleChannelMute(ctx.getSource().getPlayerOrException(), "global", true))
+                )
                 .then(argument(MESSAGE_KEY, message())
                         .executes(ctx -> sendInChannel(ctx, "global", true))
                 )
@@ -49,12 +52,28 @@ public class ChatCommand {
         builder.then(argument("channel", word())
                 .suggests(availableChannels())
                 .executes(ctx -> switchChannel(ctx.getSource().getPlayerOrException(), getString(ctx, "channel"), false))
+                .then(literal("toggle")
+                        .executes(ctx -> toggleChannelMute(ctx.getSource().getPlayerOrException(), getString(ctx, "channel"), false))
+                )
                 .then(argument(MESSAGE_KEY, message())
                         .executes(ctx -> sendInChannel(ctx, getString(ctx, "channel"), false))
                 )
         );
 
         dispatcher.register(builder);
+    }
+
+    private static int toggleChannelMute(ServerPlayer player, String name, boolean isGlobal) {
+        ChatChannel channel = isGlobal ? null : Channels.get(name);
+        if (!isGlobal && (channel == null || !channel.canUse(player))) {
+            player.sendSystemMessage(Formatter.parse(Config.instance().messages.channelNotFound.replace("${name}", name)));
+            return 0;
+        }
+
+        boolean muted = DataManager.get(player).toggleMute(channel);
+        String message = muted ? Config.instance().messages.muteChannel : Config.instance().messages.unMuteChannel;
+        player.sendSystemMessage(Formatter.parse(message.replace("${channel}", StringUtils.capitalize(name))));
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int switchChannel(ServerPlayer player, String name, boolean isGlobal) {
@@ -66,7 +85,7 @@ public class ChatCommand {
 
         player.sendSystemMessage(Formatter.parse(Config.instance().messages.switchedChannels.replace("${channel}", StringUtils.capitalize(name))));
         DataManager.get(player).channel = channel;
-        IServerPlayer.resetActionBarPacket(player);
+        IServerPlayer.updateActionBarPacket(player);
         return Command.SINGLE_SUCCESS;
     }
 

@@ -15,7 +15,7 @@ public interface IServerPlayer {
 
     void delayNextPacket();
 
-    void resetActionBarPacket();
+    void updateActionBarPacket();
 
     static UUID getReplyTarget(ServerPlayer player) {
         return ((IServerPlayer) player).getReplyTarget();
@@ -25,7 +25,7 @@ public interface IServerPlayer {
         ((IServerPlayer) player).setReplyTarget(uuid);
     }
 
-    static void resetActionBarPacket(ServerPlayer player) {
-        ((IServerPlayer) player).resetActionBarPacket();
+    static void updateActionBarPacket(ServerPlayer player) {
+        ((IServerPlayer) player).updateActionBarPacket();
     }
 }

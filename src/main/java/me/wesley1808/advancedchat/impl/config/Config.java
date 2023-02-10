@@ -92,9 +92,12 @@ public class Config {
         public String ignored = "<red>${player} is ignoring you.";
         public String ignoredPlayer = "<dark_aqua>You are now ignoring <green>${player}";
         public String unignoredPlayer = "<dark_aqua>You are no longer ignoring <green>${player}";
+        public String muteChannel = "<dark_aqua>Enabled messages from <green>${channel}";
+        public String unMuteChannel = "<dark_aqua>Disabled messages from <green>${channel}";
         public String cannotIgnoreSelf = "<red>You cannot ignore yourself!";
         public String alreadyIgnored = "<red>You are already ignoring ${player}!";
         public String notAlreadyIgnored = "<red>You aren't ignoring ${player}!";
         public String channelNotFound = "<red>Unable to find a channel with name '${name}'!";
+        public String channelMuted = "<red>You have messages disabled from this channel!";
     }
 }

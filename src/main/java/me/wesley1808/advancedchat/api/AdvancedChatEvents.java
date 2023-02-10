@@ -12,7 +12,6 @@ public class AdvancedChatEvents {
         }
     });
 
-
     @FunctionalInterface
     public interface MessageFilteredEvent {
         void onMessageFiltered(ServerPlayer sender, String message);

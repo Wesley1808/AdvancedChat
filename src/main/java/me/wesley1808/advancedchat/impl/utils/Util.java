@@ -111,19 +111,19 @@ public class Util {
         return filtered;
     }
 
-    public static List<ServerPlayer> filterIgnored(ServerPlayer sender) {
-        return filterIgnored(sender, sender.server.getPlayerList().getPlayers());
-    }
-
     public static List<ServerPlayer> filterIgnored(ServerPlayer sender, Collection<ServerPlayer> players) {
-        if (Permission.check(sender, Permission.BYPASS_IGNORE, 2)) {
-            return new ObjectArrayList<>(players);
+        boolean bypassesIgnore = Permission.check(sender, Permission.BYPASS_IGNORE, 2);
+        AdvancedChatData senderData = DataManager.get(sender);
+
+        if (senderData.hasMuted(senderData.channel)) {
+            sender.sendSystemMessage(Formatter.parse(Config.instance().messages.channelMuted));
+            return new ObjectArrayList<>(0);
         }
 
         ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
         for (ServerPlayer target : players) {
             AdvancedChatData data = DataManager.get(target);
-            if (!data.ignored.contains(sender.getUUID())) {
+            if (!data.hasMuted(senderData.channel) && (bypassesIgnore || !data.isIgnoring(sender))) {
                 filtered.add(target);
             }
         }

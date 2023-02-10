@@ -70,7 +70,7 @@ public class AdvancedChatCommands {
                     data.channel = null;
                 }
 
-                IServerPlayer.resetActionBarPacket(player);
+                IServerPlayer.updateActionBarPacket(player);
             }
 
             return Command.SINGLE_SUCCESS;

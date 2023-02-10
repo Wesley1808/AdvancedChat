@@ -44,7 +44,7 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     private void advancedchat$onInit(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, CallbackInfo ci) {
-        this.resetActionBarPacket();
+        this.updateActionBarPacket();
     }
 
     @Inject(method = "startRiding", at = @At(value = "RETURN", ordinal = 1))
@@ -58,7 +58,7 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         Config config = Config.instance();
         if (config.actionbar) {
             if (this.tickCount % config.actionbarUpdateInterval == 0) {
-                this.resetActionBarPacket();
+                this.updateActionBarPacket();
             }
 
             if (this.actionBarPacket != null) {
@@ -94,7 +94,7 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     }
 
     @Override
-    public void resetActionBarPacket() {
+    public void updateActionBarPacket() {
         ServerPlayer player = (ServerPlayer) (Object) this;
         AdvancedChatData data = DataManager.get(player);
         if (data.channel == null) {
