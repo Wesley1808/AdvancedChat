@@ -32,7 +32,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -54,17 +53,23 @@ public class Util {
     }
 
     public static MutableComponent addHoverText(MutableComponent component, ServerPlayer sender) {
+        String receiver = Config.instance().receiver;
         String hover = Config.instance().hoverText;
-        if (hover.isEmpty()) return component;
+        if (receiver.isEmpty() || hover.isEmpty()) {
+            return component;
+        }
 
         List<ServerPlayer> players = sender.server.getPlayerList().getPlayers();
-        List<ServerPlayer> filtered = Util.filterByChannel(sender, players);
-        if (players == filtered) return component;
 
+        // Filter out all players that ignore the sender and that cannot view the chat channel.
+        List<ServerPlayer> filtered = Util.filterByChannel(sender, Util.filterIgnored(sender, players));
+
+        // Filter out vanished players and spectators to prevent them from being exposed.
         filtered.removeIf(player -> player.isSpectator() || Util.isVanished(player));
-        if (filtered.isEmpty()) return component;
+        if (filtered.isEmpty()) {
+            return component;
+        }
 
-        String receiver = Config.instance().receiver;
         String receivers = String.join(", ", Util.map(filtered, player ->
                 receiver.replace("${player}", player.getScoreboardName())
         ));
@@ -86,26 +91,6 @@ public class Util {
         return prefix == null ? Component.empty() : Util.addHoverText((MutableComponent) prefix, player);
     }
 
-    public static List<ServerPlayer> filterByChannel(ServerPlayer sender, List<ServerPlayer> players) {
-        AdvancedChatData data = DataManager.get(sender);
-        return getPlayersIn(sender, data.channel, players);
-    }
-
-    public static List<ServerPlayer> getPlayersIn(ServerPlayer sender, @Nullable ChatChannel channel, List<ServerPlayer> players) {
-        if (channel == null) {
-            return players;
-        }
-
-        ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
-        for (ServerPlayer target : players) {
-            if (channel.canSee(sender, target)) {
-                filtered.add(target);
-            }
-        }
-
-        return filtered;
-    }
-
     public static boolean canSendChatMessage(ServerPlayer sender, boolean isGlobal) {
         AdvancedChatData data = DataManager.get(sender);
         ChatChannel channel = isGlobal ? null : data.channel;
@@ -114,7 +99,7 @@ public class Util {
             return false;
         }
 
-        if (ChatChannel.notStaff(channel) && isVanished(sender)) {
+        if (ChatChannel.notStaff(channel) && Util.isVanished(sender)) {
             sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendVanished));
             return false;
         }
@@ -122,7 +107,23 @@ public class Util {
         return true;
     }
 
-    public static List<ServerPlayer> filterIgnored(ServerPlayer sender, Collection<ServerPlayer> players) {
+    public static List<ServerPlayer> filterByChannel(ServerPlayer sender, List<ServerPlayer> players) {
+        AdvancedChatData data = DataManager.get(sender);
+        if (data.channel == null) {
+            return players;
+        }
+
+        ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
+        for (ServerPlayer target : players) {
+            if (data.channel.canSee(sender, target)) {
+                filtered.add(target);
+            }
+        }
+
+        return filtered;
+    }
+
+    public static List<ServerPlayer> filterIgnored(ServerPlayer sender, List<ServerPlayer> players) {
         final boolean bypassesIgnore = Permission.check(sender, Permission.BYPASS_IGNORE, 2);
         final boolean bypassesMute = Permission.check(sender, Permission.BYPASS_CHANNEL_MUTE, 2);
 
@@ -150,7 +151,7 @@ public class Util {
     }
 
     public static boolean isPublicChat(ServerPlayer sender) {
-        return !isVanished(sender) && DataManager.get(sender).channel == null;
+        return !Util.isVanished(sender) && DataManager.get(sender).channel == null;
     }
 
     public static void throwIfIgnored(CommandSourceStack source, Collection<ServerPlayer> targets) throws CommandSyntaxException {
