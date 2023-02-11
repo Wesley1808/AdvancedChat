@@ -1,6 +1,5 @@
 package me.wesley1808.advancedchat.impl.utils;
 
-import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -80,9 +79,7 @@ public class Util {
         Component prefix = null;
 
         AdvancedChatData data = DataManager.get(player);
-        if (ChatChannel.notStaff(data.channel) && isVanished(player)) {
-            prefix = Formatter.parse(Config.instance().selfPrefix);
-        } else if (data.channel != null) {
+        if (data.channel != null) {
             prefix = data.channel.getPrefix(player);
         }
 
@@ -91,9 +88,7 @@ public class Util {
 
     public static List<ServerPlayer> filterByChannel(ServerPlayer sender, List<ServerPlayer> players) {
         AdvancedChatData data = DataManager.get(sender);
-        return ChatChannel.notStaff(data.channel) && isVanished(sender)
-                ? Lists.newArrayList(sender)
-                : getPlayersIn(sender, data.channel, players);
+        return getPlayersIn(sender, data.channel, players);
     }
 
     public static List<ServerPlayer> getPlayersIn(ServerPlayer sender, @Nullable ChatChannel channel, List<ServerPlayer> players) {
@@ -113,25 +108,30 @@ public class Util {
 
     public static boolean canSendChatMessage(ServerPlayer sender, boolean isGlobal) {
         AdvancedChatData data = DataManager.get(sender);
-        if (data.hasMuted(isGlobal ? null : data.channel)) {
+        ChatChannel channel = isGlobal ? null : data.channel;
+        if (data.hasMuted(channel)) {
             sender.sendSystemMessage(Formatter.parse(Config.instance().messages.channelMuted));
             return false;
         }
+
+        if (ChatChannel.notStaff(channel) && isVanished(sender)) {
+            sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendVanished));
+            return false;
+        }
+
         return true;
     }
 
     public static List<ServerPlayer> filterIgnored(ServerPlayer sender, Collection<ServerPlayer> players) {
-        // Return all players if the sender has bypass permissions.
-        if (Permission.check(sender, Permission.BYPASS_IGNORE, 2)) {
-            return new ObjectArrayList<>(players);
-        }
+        final boolean bypassesIgnore = Permission.check(sender, Permission.BYPASS_IGNORE, 2);
+        final boolean bypassesMute = Permission.check(sender, Permission.BYPASS_CHANNEL_MUTE, 2);
 
         ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
         ChatChannel channel = DataManager.get(sender).channel;
 
         for (ServerPlayer target : players) {
             AdvancedChatData data = DataManager.get(target);
-            if (!data.hasMuted(channel) && !data.isIgnoring(sender)) {
+            if ((bypassesMute || !data.hasMuted(channel)) && (bypassesIgnore || !data.isIgnoring(sender))) {
                 filtered.add(target);
             }
         }

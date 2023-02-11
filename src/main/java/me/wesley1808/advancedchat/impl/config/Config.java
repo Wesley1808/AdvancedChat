@@ -18,7 +18,6 @@ public class Config {
     public boolean alwaysTriggerMessageEvent = false;
     public String hoverText = "<dark_aqua>Receivers: <dark_gray>[${receivers}]</dark_gray>";
     public String receiver = "<green>${player}</green>";
-    public String selfPrefix = "<dark_gray>[<aqua>Self</aqua>]</dark_gray> ";
     public Messages messages = new Messages();
     public Socialspy socialSpy = new Socialspy();
     public Filter filter = new Filter();
@@ -99,5 +98,6 @@ public class Config {
         public String notAlreadyIgnored = "<red>You aren't ignoring ${player}!";
         public String channelNotFound = "<red>Unable to find a channel with name '${name}'!";
         public String channelMuted = "<red>You have messages disabled from this channel!";
+        public String cannotSendVanished = "<red>You can only send messages in staff channels whilst vanished!";
     }
 }
