@@ -15,13 +15,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
@@ -47,10 +47,15 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         this.updateActionBarPacket();
     }
 
-    @Inject(method = "startRiding", at = @At(value = "RETURN", ordinal = 1))
-    private void advancedchat$onStartRiding(Entity vehicle, boolean force, CallbackInfoReturnable<Boolean> cir) {
-        // Prevents the channel overlay packets from overriding the vehicle mount overlay.
-        this.delayNextPacket();
+    @Intrinsic
+    @Override
+    public boolean startRiding(Entity entity, boolean bl) {
+        if (super.startRiding(entity, bl)) {
+            // Prevents the channel overlay packets from overriding the vehicle mount overlay.
+            this.delayNextPacket();
+            return true;
+        }
+        return false;
     }
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
