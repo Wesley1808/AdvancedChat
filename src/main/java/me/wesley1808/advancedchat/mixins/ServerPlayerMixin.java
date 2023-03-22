@@ -47,7 +47,6 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         this.updateActionBarPacket();
     }
 
-    @Intrinsic
     @Override
     public boolean startRiding(Entity entity, boolean bl) {
         if (super.startRiding(entity, bl)) {
