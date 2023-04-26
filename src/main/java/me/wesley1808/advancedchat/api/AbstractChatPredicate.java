@@ -18,7 +18,7 @@ public abstract class AbstractChatPredicate extends AbstractPredicate {
     public static PredicateContext createContext(ServerPlayer sender, ServerPlayer target) {
         // Stores the sender in the game profile, as it isn't really used anywhere else.
         // For everything else we want to be testing against the target.
-        return new PredicateContext(target.server, target.createCommandSourceStack(), target.getLevel(), target, target, sender.getGameProfile());
+        return new PredicateContext(target.server, target.createCommandSourceStack(), target.serverLevel(), target, target, sender.getGameProfile());
     }
 
     @Override

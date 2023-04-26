@@ -34,7 +34,7 @@ public class ServerGamePacketListenerImplMixin {
     )
     private ChatType.Bound advancedchat$addChannelPrefix(ResourceKey<ChatType> key, Entity entity) {
         MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(this.player);
-        return ChatType.bind(key, entity.level.registryAccess(), prefix.append(entity.getDisplayName()));
+        return ChatType.bind(key, entity.level().registryAccess(), prefix.append(entity.getDisplayName()));
     }
 
     @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At("RETURN"))

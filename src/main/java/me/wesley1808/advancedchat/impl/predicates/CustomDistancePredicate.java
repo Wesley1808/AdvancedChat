@@ -28,7 +28,7 @@ public class CustomDistancePredicate extends AbstractChatPredicate {
     public PredicateResult<?> test(ServerPlayer sender, ServerPlayer target) {
         Vec3 pos1 = sender.position();
         Vec3 pos2 = target.position();
-        return PredicateResult.ofBoolean(sender.level == target.level && this.predicate.matches(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z));
+        return PredicateResult.ofBoolean(sender.level() == target.level() && this.predicate.matches(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z));
     }
 
     private static class DistancePredicateCodec implements Codec<DistancePredicate> {
