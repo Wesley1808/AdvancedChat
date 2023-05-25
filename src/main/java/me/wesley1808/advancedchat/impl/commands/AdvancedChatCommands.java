@@ -43,10 +43,10 @@ public class AdvancedChatCommands {
             component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(error))));
             source.sendFailure(component);
             return 0;
-        } else {
-            source.sendSystemMessage(Component.literal("Saved config!").withStyle(ChatFormatting.GREEN));
-            return Command.SINGLE_SUCCESS;
         }
+
+        source.sendSuccess(() -> Component.literal("Saved config!").withStyle(ChatFormatting.GREEN), true);
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int reload(CommandSourceStack source) {
@@ -56,24 +56,24 @@ public class AdvancedChatCommands {
             component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(error))));
             source.sendFailure(component);
             return 0;
-        } else {
-            source.sendSystemMessage(Component.literal("Reloaded config!").withStyle(ChatFormatting.GREEN));
-            Channels.register();
+        }
 
-            for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
-                AdvancedChatData data = DataManager.get(player);
-                String prevName = data.channel != null ? data.channel.name : null;
-                ChatChannel channel = Channels.get(prevName);
-                if (channel != null && channel.canUse(player)) {
-                    data.channel = channel;
-                } else {
-                    data.channel = null;
-                }
+        source.sendSuccess(() -> Component.literal("Reloaded config!").withStyle(ChatFormatting.GREEN), true);
+        Channels.register();
 
-                IServerPlayer.updateActionBarPacket(player);
+        for (ServerPlayer player : source.getServer().getPlayerList().getPlayers()) {
+            AdvancedChatData data = DataManager.get(player);
+            String prevName = data.channel != null ? data.channel.name : null;
+            ChatChannel channel = Channels.get(prevName);
+            if (channel != null && channel.canUse(player)) {
+                data.channel = channel;
+            } else {
+                data.channel = null;
             }
 
-            return Command.SINGLE_SUCCESS;
+            IServerPlayer.updateActionBarPacket(player);
         }
+
+        return Command.SINGLE_SUCCESS;
     }
 }

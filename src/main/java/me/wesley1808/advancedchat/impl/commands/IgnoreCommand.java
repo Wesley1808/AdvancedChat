@@ -11,6 +11,7 @@ import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.GameProfileCache;
 
 import java.util.Optional;
 
@@ -69,8 +70,10 @@ public class IgnoreCommand {
         return (ctx, builder) -> {
             CommandSourceStack source = ctx.getSource();
             AdvancedChatData data = DataManager.get(source.getPlayerOrException());
+            GameProfileCache profileCache = source.getServer().getProfileCache();
+
             return Util.suggest(builder, Util.map(data.ignored, (uuid) -> {
-                Optional<GameProfile> profile = source.getServer().getProfileCache().get(uuid);
+                Optional<GameProfile> profile = profileCache != null ? profileCache.get(uuid) : Optional.empty();
                 return profile.map(GameProfile::getName).orElse(null);
             }));
         };
