@@ -74,6 +74,7 @@ public class Config {
         public boolean enabled = false;
         public boolean forceTextFiltering = false;
         public boolean logFilteredMessages = true;
+        public boolean hideFilteredMessages = false;
         public String[] filteredWords = {};
         public Pattern[] regexFilterPatterns = {};
     }
@@ -99,5 +100,6 @@ public class Config {
         public String channelNotFound = "<red>Unable to find a channel with name '${name}'!";
         public String channelMuted = "<red>You have messages disabled from this channel!";
         public String cannotSendVanished = "<red>You can only send messages in staff channels whilst vanished!";
+        public String cannotSendFiltered = "<red>Your message could not be sent, as it was censored!\nMessage: ${message}";
     }
 }

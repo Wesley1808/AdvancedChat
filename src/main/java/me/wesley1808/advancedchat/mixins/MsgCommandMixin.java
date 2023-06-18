@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Mixin(MsgCommand.class)
 public class MsgCommandMixin {
@@ -36,6 +37,14 @@ public class MsgCommandMixin {
     )
     private static void advancedchat$verifyNotIgnored(CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir, Collection<ServerPlayer> targets) throws CommandSyntaxException {
         Util.throwIfIgnored(context.getSource(), targets);
+    }
+
+    @Inject(method = "sendMessage", at = @At("HEAD"), cancellable = true)
+    private static void advancedchat$hideChatMessage(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci) {
+        ServerPlayer sender = source.getPlayer();
+        if (sender != null && Util.shouldHideMessage(sender, message)) {
+            ci.cancel();
+        }
     }
 
     @Inject(

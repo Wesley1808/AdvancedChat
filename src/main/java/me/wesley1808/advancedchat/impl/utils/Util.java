@@ -6,22 +6,21 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import eu.pb4.placeholders.api.Placeholders;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.drex.vanish.api.VanishAPI;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -35,6 +34,7 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -94,17 +94,36 @@ public class Util {
     public static boolean canSendChatMessage(ServerPlayer sender, boolean isGlobal) {
         AdvancedChatData data = DataManager.get(sender);
         ChatChannel channel = isGlobal ? null : data.channel;
+        Config.Messages messages = Config.instance().messages;
+
         if (data.hasMuted(channel)) {
-            sender.sendSystemMessage(Formatter.parse(Config.instance().messages.channelMuted));
+            sender.sendSystemMessage(Formatter.parse(messages.channelMuted));
             return false;
         }
 
         if (ChatChannel.notStaff(channel) && Util.isVanished(sender)) {
-            sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendVanished));
+            sender.sendSystemMessage(Formatter.parse(messages.cannotSendVanished));
             return false;
         }
 
         return true;
+    }
+
+    public static boolean shouldHideMessage(ServerPlayer sender, PlayerChatMessage message) {
+        FilterMask mask = message.filterMask();
+
+        if (!mask.isEmpty() && Config.instance().filter.hideFilteredMessages) {
+            String content = message.signedContent();
+            String censored = mask.apply(content);
+            sender.sendSystemMessage(Placeholders.parseText(
+                    Formatter.parseNodes(Config.instance().messages.cannotSendFiltered),
+                    Placeholders.PREDEFINED_PLACEHOLDER_PATTERN,
+                    Map.of("message", Component.literal(censored != null ? censored : content).withStyle(ChatFormatting.RED))
+            ));
+            return true;
+        }
+
+        return false;
     }
 
     public static List<ServerPlayer> filterByChannel(ServerPlayer sender, List<ServerPlayer> players) {
