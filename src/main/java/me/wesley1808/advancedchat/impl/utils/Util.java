@@ -13,7 +13,6 @@ import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
-import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.core.Holder;
@@ -118,7 +117,7 @@ public class Util {
             sender.sendSystemMessage(Placeholders.parseText(
                     Formatter.parseNodes(Config.instance().messages.cannotSendFiltered),
                     Placeholders.PREDEFINED_PLACEHOLDER_PATTERN,
-                    Map.of("message", Component.literal(censored != null ? censored : content).withStyle(ChatFormatting.RED))
+                    Map.of("message", Component.literal(censored != null ? censored : content))
             ));
             return true;
         }
