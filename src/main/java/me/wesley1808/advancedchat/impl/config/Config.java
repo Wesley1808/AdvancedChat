@@ -75,6 +75,7 @@ public class Config {
         public boolean enabled = false;
         public int messageCooldown = 1000;
         public boolean blockSimilarMessages = false;
+        public int similarityMinLength = 5;
         public int similarityThreshold = 85;
     }
 

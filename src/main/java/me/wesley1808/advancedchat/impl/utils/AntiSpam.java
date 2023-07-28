@@ -15,7 +15,7 @@ public class AntiSpam {
         if (lastMessage != null && config.enabled) {
             // Check for similar messages
             if (config.blockSimilarMessages) {
-                int similarity = AntiSpam.getSimilarity(lastMessage.signedContent(), message.signedContent());
+                int similarity = AntiSpam.getSimilarity(lastMessage.signedContent(), message.signedContent(), config.similarityMinLength);
                 if (similarity >= config.similarityThreshold) {
                     sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendSimilar));
                     return true;
@@ -33,8 +33,12 @@ public class AntiSpam {
         return false;
     }
 
-    public static int getSimilarity(String first, String second) {
+    public static int getSimilarity(String first, String second, int minLength) {
         int longest = Math.max(first.length(), second.length());
+        if (longest < minLength) {
+            return 0;
+        }
+
         if (longest == 0 || first.equalsIgnoreCase(second)) {
             return 100;
         }

@@ -147,6 +147,8 @@ The configuration file can be found at `/config/advancedchat.json`
     "messageCooldown": 1000,
     // Whether to block a message when it is too similar to the last message.
     "blockSimilarMessages": false,
+    // Minimum length of a message before it can check for similarities.
+    "similarityMinLength": 5,
     // Minimum similarity percentage between messages to block them.
     "similarityThreshold": 85
   },
