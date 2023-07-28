@@ -36,6 +36,13 @@ Since this mod adds new ways of private conversations, it also includes a social
 These modes allow you to control which type of messages you want to 'spy' on, as all of them could be too much.
 
 ___
+### Anti Spam
+
+A simple anti spam system that prevents players from sending too many messages in a short time.
+
+It also has the option to prevent players from sending the same (or very similar) message multiple times in a row.
+
+___
 ### Text Filter
 
 Allows you to filter specific text received from the client, like chat messages, commands, signs and books.
@@ -109,10 +116,17 @@ The configuration file can be found at `/config/advancedchat.json`
     "ignored": "<red>${player} is ignoring you.",
     "ignoredPlayer": "<dark_aqua>You are now ignoring <green>${player}",
     "unignoredPlayer": "<dark_aqua>You are no longer ignoring <green>${player}",
+    "muteChannel": "<dark_aqua>Enabled messages from <green>${channel}",
+    "unMuteChannel": "<dark_aqua>Disabled messages from <green>${channel}",
     "cannotIgnoreSelf": "<red>You cannot ignore yourself!",
     "alreadyIgnored": "<red>You are already ignoring ${player}!",
     "notAlreadyIgnored": "<red>You aren't ignoring ${player}!",
-    "channelNotFound": "<red>Unable to find a channel with name '${name}'!"
+    "channelNotFound": "<red>Unable to find a channel with name '${name}'!",
+    "channelMuted": "<red>You have messages disabled from this channel!",
+    "cannotSendVanished": "<red>You can only send messages in staff channels whilst vanished!",
+    "cannotSendFiltered": "<red>Your message could not be sent, as it was censored!\nMessage: ${message}",
+    "cannotSendSimilar": "<red>This message is too similar to your last message!",
+    "cannotSendSpam": "<red>Please wait before sending another message!"
   },
 
   // Socialspy related configuration.
@@ -123,6 +137,18 @@ The configuration file can be found at `/config/advancedchat.json`
     "prefix": "<dark_gray>[<aqua>Spy</aqua>]</dark_gray> ",
     "privateMessage": "<dark_gray>[</dark_gray>${source} <gray>→</gray> ${target}<dark_gray>]</dark_gray> <gray>${message}",
     "channelMessage": "${channel}${sender} <dark_gray>»</dark_gray> ${message}"
+  },
+
+  // Anti spam configuration
+  "antiSpam": {
+    // Enables the anti spam feature.
+    "enabled": false,
+    // Minimum cooldown in milliseconds between messages.
+    "messageCooldown": 1000,
+    // Whether to block a message when it is too similar to the last message.
+    "blockSimilarMessages": false,
+    // Minimum similarity percentage between messages to block them.
+    "similarityThreshold": 85
   },
 
   // Text filter configuration.
