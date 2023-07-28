@@ -6,6 +6,7 @@ import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -31,6 +32,9 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     @Unique
     @Nullable
     private ClientboundSetActionBarTextPacket actionBarPacket;
+    @Unique
+    @Nullable
+    private PlayerChatMessage lastChatMessage;
     @Unique
     @Nullable
     private UUID replyTarget;
@@ -78,6 +82,17 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     @Override
     public ClientboundSetActionBarTextPacket getActionBarPacket() {
         return this.actionBarPacket;
+    }
+
+    @Nullable
+    @Override
+    public PlayerChatMessage getLastChatMessage() {
+        return this.lastChatMessage;
+    }
+
+    @Override
+    public void setLastChatMessage(PlayerChatMessage lastChatMessage) {
+        this.lastChatMessage = lastChatMessage;
     }
 
     @Nullable

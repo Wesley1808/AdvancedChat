@@ -90,7 +90,7 @@ public class Util {
         return prefix == null ? Component.empty() : Util.addHoverText((MutableComponent) prefix, player);
     }
 
-    public static boolean canSendChatMessage(ServerPlayer sender, boolean isGlobal) {
+    public static boolean canSendChatMessage(ServerPlayer sender, PlayerChatMessage message, boolean isGlobal) {
         AdvancedChatData data = DataManager.get(sender);
         ChatChannel channel = isGlobal ? null : data.channel;
         Config.Messages messages = Config.instance().messages;
@@ -105,7 +105,7 @@ public class Util {
             return false;
         }
 
-        return true;
+        return channel != null || !AntiSpam.checkForSpam(sender, message);
     }
 
     public static boolean shouldHideMessage(ServerPlayer sender, PlayerChatMessage message) {

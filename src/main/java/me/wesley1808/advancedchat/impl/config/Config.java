@@ -20,6 +20,7 @@ public class Config {
     public String receiver = "<green>${player}</green>";
     public Messages messages = new Messages();
     public Socialspy socialSpy = new Socialspy();
+    public AntiSpam antiSpam = new AntiSpam();
     public Filter filter = new Filter();
     public Sound channelMessageSound = new Sound();
     public Sound privateMessageSound = new Sound();
@@ -70,6 +71,13 @@ public class Config {
         public String channelMessage = "${channel}${sender} <dark_gray>»</dark_gray> ${message}";
     }
 
+    public static class AntiSpam {
+        public boolean enabled = false;
+        public int messageCooldown = 1000;
+        public boolean blockSimilarMessages = false;
+        public int similarityThreshold = 85;
+    }
+
     public static class Filter {
         public boolean enabled = false;
         public boolean forceTextFiltering = false;
@@ -101,5 +109,7 @@ public class Config {
         public String channelMuted = "<red>You have messages disabled from this channel!";
         public String cannotSendVanished = "<red>You can only send messages in staff channels whilst vanished!";
         public String cannotSendFiltered = "<red>Your message could not be sent, as it was censored!\nMessage: ${message}";
+        public String cannotSendSimilar = "<red>This message is too similar to your last message!";
+        public String cannotSendSpam = "<red>Please wait before sending another message!";
     }
 }

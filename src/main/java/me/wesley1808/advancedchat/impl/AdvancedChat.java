@@ -45,11 +45,11 @@ public class AdvancedChat implements ModInitializer {
             ReplyCommand.register(dispatcher);
         });
 
-        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, chatType) -> Util.canSendChatMessage(sender, false));
+        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register((message, sender, chatType) -> Util.canSendChatMessage(sender, message, false));
 
         ServerMessageEvents.ALLOW_COMMAND_MESSAGE.register((message, source, chatType) -> {
             ServerPlayer sender = source.getPlayer();
-            return sender == null || Util.canSendChatMessage(sender, true);
+            return sender == null || Util.canSendChatMessage(sender, message, true);
         });
 
         if (ModCompat.STYLEDCHAT) {
