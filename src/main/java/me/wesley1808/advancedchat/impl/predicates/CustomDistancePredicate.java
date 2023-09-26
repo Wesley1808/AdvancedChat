@@ -11,8 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Optional;
-
 public class CustomDistancePredicate extends AbstractChatPredicate {
     public static final ResourceLocation ID = new ResourceLocation("advancedchat", "distance");
     public static final MapCodec<CustomDistancePredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
@@ -39,12 +37,7 @@ public class CustomDistancePredicate extends AbstractChatPredicate {
 
         @Override
         public <T> DataResult<Pair<DistancePredicate, T>> decode(DynamicOps<T> ops, T input) {
-            Optional<DistancePredicate> optional = DistancePredicate.fromJson(input instanceof JsonElement jsonElement ? jsonElement : ops.convertTo(JsonOps.INSTANCE, input));
-            if (optional.isPresent()) {
-                return DataResult.success(new Pair<>(optional.get(), input));
-            } else {
-                return DataResult.error(() -> "Distance predicate JSON object is null");
-            }
+            return DataResult.success(new Pair<>(DistancePredicate.fromJson(input instanceof JsonElement jsonElement ? jsonElement : ops.convertTo(JsonOps.INSTANCE, input)), input));
         }
 
         @Override

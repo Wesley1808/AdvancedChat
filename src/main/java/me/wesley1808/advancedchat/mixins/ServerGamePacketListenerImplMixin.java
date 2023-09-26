@@ -4,32 +4,25 @@ import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import me.wesley1808.advancedchat.impl.utils.Util;
-import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.CommonListenerCookie;
-import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerGamePacketListenerImpl.class)
-public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPacketListenerImpl {
+public class ServerGamePacketListenerImplMixin {
     @Shadow
     public ServerPlayer player;
-
-    public ServerGamePacketListenerImplMixin(MinecraftServer minecraftServer, Connection connection, CommonListenerCookie commonListenerCookie) {
-        super(minecraftServer, connection, commonListenerCookie);
-    }
 
     @Redirect(
             method = "broadcastChatMessage",
@@ -43,10 +36,8 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
         return ChatType.bind(key, entity.level().registryAccess(), prefix.append(entity.getDisplayName()));
     }
 
-    @Override
-    public void send(Packet<?> packet, @Nullable PacketSendListener packetSendListener) {
-        super.send(packet, packetSendListener);
-
+    @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At("RETURN"))
+    private void advancedchat$onSend(Packet<?> packet, PacketSendListener packetSendListener, CallbackInfo ci) {
         if (Config.instance().actionbar && this.player instanceof IServerPlayer player) {
             Packet<?> current = player.getActionBarPacket();
             if (current != null && current != packet && Util.isOverlayPacket(packet)) {

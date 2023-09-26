@@ -31,7 +31,7 @@ public class ServerPlayerMixin {
             method = "updateOptions",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ClientInformation;textFilteringEnabled()Z"
+                    target = "Lnet/minecraft/network/protocol/game/ServerboundClientInformationPacket;textFilteringEnabled()Z"
             )
     )
     private boolean advancedchat$forceTextFiltering(boolean textFilteringEnabled) {
