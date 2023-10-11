@@ -57,7 +57,7 @@ public class MsgCommandMixin {
     private static void advancedchat$onSendMessage(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci, ChatType.Bound bound, OutgoingChatMessage outgoingChatMessage, boolean bl, Iterator<?> var6, ServerPlayer target, ChatType.Bound bound2) {
         ServerPlayer sender = source.getPlayer();
         if (sender != null) {
-            Util.playSound(sender, List.of(target), Config.instance().privateMessageSound);
+            Util.playSound(target, Config.instance().privateMessageSound);
             Socialspy.send(source, target, message);
             IServerPlayer.setReplyTarget(sender, target.getUUID());
             IServerPlayer.setReplyTarget(target, sender.getUUID());

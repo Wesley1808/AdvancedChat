@@ -22,7 +22,7 @@ public class Config {
     public Socialspy socialSpy = new Socialspy();
     public AntiSpam antiSpam = new AntiSpam();
     public Filter filter = new Filter();
-    public Sound channelMessageSound = new Sound();
+    public Sound chatPingSound = new Sound();
     public Sound privateMessageSound = new Sound();
 
     public ChatChannel[] channels = {

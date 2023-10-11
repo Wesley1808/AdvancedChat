@@ -184,25 +184,19 @@ public class Util {
         }
     }
 
-    public static void playSound(ServerPlayer sender, Collection<ServerPlayer> targets, Config.Sound config) {
+    public static void playSound(ServerPlayer target, Config.Sound config) {
         if (config.enabled && config.sound != null) {
             Holder<SoundEvent> sound = BuiltInRegistries.SOUND_EVENT.wrapAsHolder(config.sound);
-            long seed = sender.serverLevel().getRandom().nextLong();
-
-            for (ServerPlayer target : targets) {
-                if (sender != target) {
-                    target.connection.send(new ClientboundSoundPacket(
-                            sound,
-                            SoundSource.RECORDS,
-                            target.getX(),
-                            target.getY(),
-                            target.getZ(),
-                            config.volume,
-                            config.pitch,
-                            seed
-                    ));
-                }
-            }
+            target.connection.send(new ClientboundSoundPacket(
+                    sound,
+                    SoundSource.RECORDS,
+                    target.getX(),
+                    target.getY(),
+                    target.getZ(),
+                    config.volume,
+                    config.pitch,
+                    target.serverLevel().getRandom().nextLong()
+            ));
         }
     }
 

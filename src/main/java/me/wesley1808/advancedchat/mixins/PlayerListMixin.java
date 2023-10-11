@@ -45,7 +45,6 @@ public class PlayerListMixin {
 
         if (sender != null && !players.isEmpty() && Util.isChat(this.server, bound.chatType())) {
             List<ServerPlayer> receivers = Util.filterByChannel(sender, players);
-            Util.playSound(sender, receivers, Config.instance().channelMessageSound);
             Socialspy.send(sender, receivers, message);
             return receivers;
         }
