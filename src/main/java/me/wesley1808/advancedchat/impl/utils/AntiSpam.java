@@ -14,7 +14,7 @@ public class AntiSpam {
 
         if (lastMessage != null && config.enabled) {
             // Check for similar messages
-            if (config.blockSimilarMessages) {
+            if (config.blockSimilarMessages && !Permission.check(sender, Permission.BYPASS_ANTISPAM_SIMILARITY, 2)) {
                 int similarity = AntiSpam.getSimilarity(lastMessage.signedContent(), message.signedContent(), config.similarityMinLength);
                 if (similarity >= config.similarityThreshold) {
                     sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendSimilar));
@@ -23,7 +23,7 @@ public class AntiSpam {
             }
 
             // Check for the message cooldown
-            if (message.timeStamp().isBefore(lastMessage.timeStamp().plusMillis(config.messageCooldown))) {
+            if (message.timeStamp().isBefore(lastMessage.timeStamp().plusMillis(config.messageCooldown)) && !Permission.check(sender, Permission.BYPASS_ANTISPAM_COOLDOWN, 2)) {
                 sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendSpam));
                 return true;
             }
