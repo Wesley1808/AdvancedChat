@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 @Mixin(MsgCommand.class)
 public class MsgCommandMixin {
