@@ -16,16 +16,12 @@ import me.wesley1808.advancedchat.impl.data.DataManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -34,7 +30,6 @@ import net.minecraft.world.entity.Entity;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -156,12 +151,6 @@ public class Util {
         }
 
         return filtered;
-    }
-
-    public static boolean isChat(MinecraftServer server, ChatType type) {
-        Optional<? extends Registry<ChatType>> optional = server.registryAccess().registry(Registries.CHAT_TYPE);
-        ResourceLocation key = optional.map(registry -> registry.getKey(type)).orElse(null);
-        return ChatType.CHAT.location().equals(key);
     }
 
     public static boolean isVanished(Entity entity) {

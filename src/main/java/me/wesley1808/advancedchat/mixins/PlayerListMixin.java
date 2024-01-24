@@ -42,7 +42,7 @@ public class PlayerListMixin {
     private List<ServerPlayer> advancedchat$filterPlayers(List<ServerPlayer> original, PlayerChatMessage message, Predicate<ServerPlayer> predicate, @Nullable ServerPlayer sender, ChatType.Bound bound) {
         List<ServerPlayer> players = sender != null ? Util.filterIgnored(sender, original) : original;
 
-        if (sender != null && !players.isEmpty() && Util.isChat(this.server, bound.chatType())) {
+        if (sender != null && !players.isEmpty() && bound.chatType().is(ChatType.CHAT.location())) {
             List<ServerPlayer> receivers = Util.filterByChannel(sender, players);
             Socialspy.send(sender, receivers, message);
             return receivers;
