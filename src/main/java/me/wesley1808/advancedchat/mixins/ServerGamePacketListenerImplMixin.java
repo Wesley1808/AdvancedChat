@@ -36,8 +36,11 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
 
     @Inject(method = "sendPlayerChatMessage", at = @At("HEAD"))
     private void advancedchat$onChatMessage(PlayerChatMessage message, ChatType.Bound bound, CallbackInfo ci) {
-        String pingName = '@' + this.player.getScoreboardName();
-        if (message.signedContent().contains(pingName)) {
+        String playerName = this.player.getScoreboardName();
+        String content = message.signedContent();
+        int index = content.indexOf(playerName);
+
+        if (index >= 0 && Util.isWhiteSpace(content, index - 1) && Util.isWhiteSpace(content, index + playerName.length())) {
             Util.playSound(this.player, Config.instance().chatPingSound);
         }
     }
