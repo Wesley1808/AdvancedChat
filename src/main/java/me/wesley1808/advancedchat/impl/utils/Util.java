@@ -206,6 +206,10 @@ public class Util {
         return result;
     }
 
+    public static boolean isWhiteSpace(String string, int index) {
+        return index < 0 || index >= string.length() || Character.isWhitespace(string.charAt(index));
+    }
+
     public static CompletableFuture<Suggestions> suggest(SuggestionsBuilder builder, Collection<String> suggestions) {
         if (suggestions.isEmpty()) {
             return Suggestions.empty();
