@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ChannelPredicate extends AbstractPredicate {
     private static final String GLOBAL_CHANNEL = "global";
-    public static final ResourceLocation ID = new ResourceLocation("advancedchat", "channel");
+    public static final ResourceLocation ID = ResourceLocation.tryBuild("advancedchat", "channel");
     public static final MapCodec<ChannelPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Codec.STRING.fieldOf("channel").forGetter(ChannelPredicate::channel))
             .apply(instance, ChannelPredicate::new)
