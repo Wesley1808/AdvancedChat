@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 public class CustomDistancePredicate extends AbstractChatPredicate {
-    public static final ResourceLocation ID = new ResourceLocation("advancedchat", "distance");
+    public static final ResourceLocation ID = ResourceLocation.tryBuild("advancedchat", "distance");
     public static final MapCodec<CustomDistancePredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(DistancePredicate.CODEC.fieldOf("value").forGetter((inst) -> inst.predicate))
             .apply(instance, CustomDistancePredicate::new)
