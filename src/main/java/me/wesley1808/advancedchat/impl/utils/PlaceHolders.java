@@ -23,7 +23,7 @@ public class PlaceHolders {
     }
 
     private static void register(String name, PlaceholderHandler handler) {
-        Placeholders.register(ResourceLocation.tryBuild("advancedchat", name), handler);
+        Placeholders.register(ResourceLocation.fromNamespaceAndPath("advancedchat", name), handler);
     }
 }
 

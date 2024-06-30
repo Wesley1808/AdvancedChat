@@ -1,6 +1,7 @@
 package me.wesley1808.advancedchat.impl.utils;
 
 import eu.pb4.placeholders.api.Placeholders;
+import eu.pb4.styledchat.ducks.ExtSignedMessage;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.AdvancedChat;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
@@ -28,7 +29,7 @@ public class Socialspy {
                 Map.of(
                         "source", source.getDisplayName(),
                         "target", target.getDisplayName(),
-                        "message", Component.literal(message.signedContent())
+                        "message", getPrivateMessageContent(message)
                 )
         ));
 
@@ -38,6 +39,14 @@ public class Socialspy {
         });
         if (config.logPrivateMessages) {
             AdvancedChat.getLogger().info(text.getString());
+        }
+    }
+
+    private static Component getPrivateMessageContent(PlayerChatMessage message) {
+        if (ModCompat.STYLEDCHAT) {
+            return ExtSignedMessage.getArg(message, "base_input");
+        } else {
+            return message.decoratedContent();
         }
     }
 
@@ -55,7 +64,7 @@ public class Socialspy {
                 Map.of(
                         "channel", AdvancedChatAPI.getChannelPrefix(sender),
                         "sender", sender.getDisplayName(),
-                        "message", Component.literal(message.signedContent())
+                        "message", message.decoratedContent()
                 )
         ));
 

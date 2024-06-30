@@ -1,5 +1,6 @@
 package me.wesley1808.advancedchat.mixins;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.wesley1808.advancedchat.impl.config.Config;
@@ -7,8 +8,6 @@ import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import me.wesley1808.advancedchat.impl.utils.Socialspy;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.OutgoingChatMessage;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.commands.MsgCommand;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 @Mixin(MsgCommand.class)
 public class MsgCommandMixin {
@@ -47,13 +45,15 @@ public class MsgCommandMixin {
 
     @Inject(
             method = "sendMessage",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/commands/CommandSourceStack;shouldFilterMessageTo(Lnet/minecraft/server/level/ServerPlayer;)Z"
             )
     )
-    private static void advancedchat$onSendMessage(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci, ChatType.Bound bound, OutgoingChatMessage outgoingChatMessage, boolean bl, Iterator<?> var6, ServerPlayer target, ChatType.Bound bound2) {
+    private static void advancedchat$onSendMessage(
+            CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci,
+            @Local(ordinal = 0) ServerPlayer target
+    ) {
         ServerPlayer sender = source.getPlayer();
         if (sender != null) {
             Util.playSound(target, Config.instance().privateMessageSound);

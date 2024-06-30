@@ -13,16 +13,16 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
 
-public class PlayerPredicateCompare extends AbstractChatPredicate {
-    public static final ResourceLocation ID = ResourceLocation.tryBuild("advancedchat", "compare");
-    public static final MapCodec<PlayerPredicateCompare> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+public class PlayerComparePredicate extends AbstractChatPredicate {
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("advancedchat", "compare");
+    public static final MapCodec<PlayerComparePredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             GenericObject.CODEC.fieldOf("compare_predicate").forGetter((x) -> x.predicateObj)
-    ).apply(instance, PlayerPredicateCompare::new));
+    ).apply(instance, PlayerComparePredicate::new));
 
     private final Object predicateObj;
     private final MinecraftPredicate predicate;
 
-    public PlayerPredicateCompare(Object predicateObj) {
+    public PlayerComparePredicate(Object predicateObj) {
         super(ID, CODEC);
 
         this.predicateObj = predicateObj;
