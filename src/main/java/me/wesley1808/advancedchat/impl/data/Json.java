@@ -6,6 +6,7 @@ import eu.pb4.predicate.api.MinecraftPredicate;
 import me.wesley1808.advancedchat.impl.channels.Channels;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -22,7 +23,7 @@ public class Json {
 
     public static final Gson CONFIG = new GsonBuilder()
             .registerTypeHierarchyAdapter(Pattern.class, new PatternSerializer())
-            .registerTypeHierarchyAdapter(MinecraftPredicate.class, GsonPredicateSerializer.INSTANCE)
+            .registerTypeHierarchyAdapter(MinecraftPredicate.class, GsonPredicateSerializer.create(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY)))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistrySerializer<>(BuiltInRegistries.SOUND_EVENT))
             .disableHtmlEscaping()
             .setPrettyPrinting()
@@ -66,7 +67,7 @@ public class Json {
             if (json.isJsonPrimitive()) {
                 ResourceLocation location = ResourceLocation.tryParse(json.getAsString());
                 if (location != null) {
-                    return this.registry.get(location);
+                    return this.registry.getValue(location);
                 }
             }
             return null;

@@ -21,7 +21,7 @@ public class Permission {
     }
 
     public static boolean check(ServerPlayer source, String perm, int level) {
-        return Permissions.check(source, perm, level);
+        return Permissions.check(source.createCommandSourceStack(), perm, level);
     }
 
     public static Predicate<CommandSourceStack> require(String perm, int level) {

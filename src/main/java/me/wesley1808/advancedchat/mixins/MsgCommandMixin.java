@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collection;
 
@@ -25,13 +24,12 @@ public class MsgCommandMixin {
 
     @Inject(
             method = "method_13463",
-            locals = LocalCapture.CAPTURE_FAILHARD,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/commands/arguments/MessageArgument;resolveChatMessage(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Ljava/util/function/Consumer;)V"
             )
     )
-    private static void advancedchat$verifyNotIgnored(CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir, Collection<ServerPlayer> targets) throws CommandSyntaxException {
+    private static void advancedchat$verifyNotIgnored(CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir, @Local(ordinal = 0) Collection<ServerPlayer> targets) throws CommandSyntaxException {
         Util.throwIfIgnored(context.getSource(), targets);
     }
 

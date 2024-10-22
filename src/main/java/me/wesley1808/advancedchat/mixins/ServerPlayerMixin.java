@@ -32,15 +32,15 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     public ServerGamePacketListenerImpl connection;
     @Unique
     @Nullable
-    private ClientboundSetActionBarTextPacket actionBarPacket;
+    private ClientboundSetActionBarTextPacket advancedchat$actionBarPacket;
     @Unique
     @Nullable
-    private PlayerChatMessage lastChatMessage;
+    private PlayerChatMessage advancedchat$lastChatMessage;
     @Unique
     @Nullable
-    private UUID replyTarget;
+    private UUID advancedchat$replyTarget;
     @Unique
-    private long nextPacketTime;
+    private long advancedchat$nextPacketTime;
 
     public ServerPlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(level, blockPos, f, gameProfile);
@@ -48,14 +48,14 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
     private void advancedchat$onInit(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
-        this.updateActionBarPacket();
+        this.advancedchat$updateActionBarPacket();
     }
 
     @Override
     public boolean startRiding(Entity entity, boolean bl) {
         if (super.startRiding(entity, bl)) {
             // Prevents the channel overlay packets from overriding the vehicle mount overlay.
-            this.delayNextPacket();
+            this.advancedchat$delayNextPacket();
             return true;
         }
         return false;
@@ -66,14 +66,14 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         Config config = Config.instance();
         if (config.actionbar) {
             if (this.tickCount % config.actionbarUpdateInterval == 0) {
-                this.updateActionBarPacket();
+                this.advancedchat$updateActionBarPacket();
             }
 
-            if (this.actionBarPacket != null) {
+            if (this.advancedchat$actionBarPacket != null) {
                 long time = System.currentTimeMillis();
-                if (this.nextPacketTime <= time) {
-                    this.connection.send(this.actionBarPacket);
-                    this.nextPacketTime = time + 1000;
+                if (this.advancedchat$nextPacketTime <= time) {
+                    this.connection.send(this.advancedchat$actionBarPacket);
+                    this.advancedchat$nextPacketTime = time + 1000;
                 }
             }
         }
@@ -81,46 +81,46 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
 
     @Nullable
     @Override
-    public ClientboundSetActionBarTextPacket getActionBarPacket() {
-        return this.actionBarPacket;
+    public ClientboundSetActionBarTextPacket advancedchat$getActionBarPacket() {
+        return this.advancedchat$actionBarPacket;
     }
 
     @Nullable
     @Override
-    public PlayerChatMessage getLastChatMessage() {
-        return this.lastChatMessage;
+    public PlayerChatMessage advancedchat$getLastChatMessage() {
+        return this.advancedchat$lastChatMessage;
     }
 
     @Override
-    public void setLastChatMessage(PlayerChatMessage lastChatMessage) {
-        this.lastChatMessage = lastChatMessage;
+    public void advancedchat$setLastChatMessage(PlayerChatMessage lastChatMessage) {
+        this.advancedchat$lastChatMessage = lastChatMessage;
     }
 
     @Nullable
     @Override
-    public UUID getReplyTarget() {
-        return this.replyTarget;
+    public UUID advancedchat$getReplyTarget() {
+        return this.advancedchat$replyTarget;
     }
 
     @Override
-    public void setReplyTarget(@Nullable UUID uuid) {
-        this.replyTarget = uuid;
+    public void advancedchat$setReplyTarget(@Nullable UUID uuid) {
+        this.advancedchat$replyTarget = uuid;
     }
 
     @Override
-    public void delayNextPacket() {
-        this.nextPacketTime = System.currentTimeMillis() + 3000;
+    public void advancedchat$delayNextPacket() {
+        this.advancedchat$nextPacketTime = System.currentTimeMillis() + 3000;
     }
 
     @Override
-    public void updateActionBarPacket() {
+    public void advancedchat$updateActionBarPacket() {
         ServerPlayer player = (ServerPlayer) (Object) this;
         AdvancedChatData data = DataManager.get(player);
         if (data.channel == null) {
-            this.actionBarPacket = null;
+            this.advancedchat$actionBarPacket = null;
             return;
         }
 
-        this.actionBarPacket = new ClientboundSetActionBarTextPacket(data.channel.getActionBarText(player));
+        this.advancedchat$actionBarPacket = new ClientboundSetActionBarTextPacket(data.channel.getActionBarText(player));
     }
 }

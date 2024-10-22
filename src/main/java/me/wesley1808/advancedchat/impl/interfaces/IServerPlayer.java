@@ -9,41 +9,41 @@ import java.util.UUID;
 
 public interface IServerPlayer {
 
-    ClientboundSetActionBarTextPacket getActionBarPacket();
+    ClientboundSetActionBarTextPacket advancedchat$getActionBarPacket();
 
     @Nullable
-    PlayerChatMessage getLastChatMessage();
+    PlayerChatMessage advancedchat$getLastChatMessage();
 
-    void setLastChatMessage(PlayerChatMessage message);
+    void advancedchat$setLastChatMessage(PlayerChatMessage message);
 
     @Nullable
-    UUID getReplyTarget();
+    UUID advancedchat$getReplyTarget();
 
-    void setReplyTarget(UUID uuid);
+    void advancedchat$setReplyTarget(UUID uuid);
 
-    void delayNextPacket();
+    void advancedchat$delayNextPacket();
 
-    void updateActionBarPacket();
+    void advancedchat$updateActionBarPacket();
 
     @Nullable
     static PlayerChatMessage getLastChatMessage(ServerPlayer player) {
-        return ((IServerPlayer) player).getLastChatMessage();
+        return ((IServerPlayer) player).advancedchat$getLastChatMessage();
     }
 
     static void setLastChatMessage(ServerPlayer player, PlayerChatMessage message) {
-        ((IServerPlayer) player).setLastChatMessage(message);
+        ((IServerPlayer) player).advancedchat$setLastChatMessage(message);
     }
 
     @Nullable
     static UUID getReplyTarget(ServerPlayer player) {
-        return ((IServerPlayer) player).getReplyTarget();
+        return ((IServerPlayer) player).advancedchat$getReplyTarget();
     }
 
     static void setReplyTarget(ServerPlayer player, UUID uuid) {
-        ((IServerPlayer) player).setReplyTarget(uuid);
+        ((IServerPlayer) player).advancedchat$setReplyTarget(uuid);
     }
 
     static void updateActionBarPacket(ServerPlayer player) {
-        ((IServerPlayer) player).updateActionBarPacket();
+        ((IServerPlayer) player).advancedchat$updateActionBarPacket();
     }
 }

@@ -62,10 +62,10 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
         super.send(packet, packetSendListener);
 
         if (Config.instance().actionbar && this.player instanceof IServerPlayer player) {
-            Packet<?> current = player.getActionBarPacket();
+            Packet<?> current = player.advancedchat$getActionBarPacket();
             if (current != null && current != packet && Util.isOverlayPacket(packet)) {
                 // Prevents the channel overlay packets from overriding other overlays from the server.
-                player.delayNextPacket();
+                player.advancedchat$delayNextPacket();
             }
         }
     }
