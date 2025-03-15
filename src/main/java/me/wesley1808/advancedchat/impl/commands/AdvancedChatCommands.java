@@ -40,7 +40,7 @@ public class AdvancedChatCommands {
         String error = ConfigManager.save();
         if (error != null) {
             MutableComponent component = Component.literal("Failed to save config!");
-            component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(error))));
+            component.withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal(error))));
             source.sendFailure(component);
             return 0;
         }
@@ -53,7 +53,7 @@ public class AdvancedChatCommands {
         String error = ConfigManager.load();
         if (error != null) {
             MutableComponent component = Component.literal("Failed to reload config!");
-            component.withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(error))));
+            component.withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal(error))));
             source.sendFailure(component);
             return 0;
         }

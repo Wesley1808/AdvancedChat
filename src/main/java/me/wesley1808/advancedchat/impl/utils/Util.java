@@ -68,8 +68,7 @@ public class Util {
                 receiver.replace("${player}", player.getScoreboardName())
         ));
 
-        return component.withStyle(style -> style.withHoverEvent(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT,
+        return component.withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
                 Formatter.parse(hover.replace("${receivers}", receivers))
         )));
     }
