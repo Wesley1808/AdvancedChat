@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
@@ -51,14 +52,16 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
         this.advancedchat$updateActionBarPacket();
     }
 
-    @Override
-    public boolean startRiding(Entity entity, boolean bl) {
-        if (super.startRiding(entity, bl)) {
-            // Prevents the channel overlay packets from overriding the vehicle mount overlay.
-            this.advancedchat$delayNextPacket();
-            return true;
-        }
-        return false;
+    @Inject(
+            method = "startRiding",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/Entity;positionRider(Lnet/minecraft/world/entity/Entity;)V"
+            )
+    )
+    public void advancedchat$onStartRiding(Entity entity, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+        // Prevents the channel overlay packets from overriding the vehicle mount overlay.
+        this.advancedchat$delayNextPacket();
     }
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
