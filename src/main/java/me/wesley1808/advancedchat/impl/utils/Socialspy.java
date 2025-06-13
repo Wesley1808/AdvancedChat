@@ -1,6 +1,7 @@
 package me.wesley1808.advancedchat.impl.utils;
 
 import eu.pb4.placeholders.api.Placeholders;
+import eu.pb4.placeholders.api.parsers.NodeParser;
 import eu.pb4.styledchat.ducks.ExtSignedMessage;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.AdvancedChat;
@@ -23,20 +24,20 @@ public class Socialspy {
     // Private Messages
     public static void send(CommandSourceStack source, ServerPlayer target, PlayerChatMessage message) {
         Config.Socialspy config = Config.instance().socialSpy;
-        MutableComponent text = Formatter.parse(config.prefix).append(Placeholders.parseText(
-                Formatter.parseNodes(config.privateMessage),
-                Placeholders.PREDEFINED_PLACEHOLDER_PATTERN,
-                Map.of(
-                        "source", source.getDisplayName(),
-                        "target", target.getDisplayName(),
-                        "message", getPrivateMessageContent(message)
-                )
-        ));
 
-        Socialspy.send(target.server, text, (player) -> {
-            Socialspy.Mode mode = DataManager.get(player).spyMode;
+        NodeParser placeholderParser = Formatter.placeholderParser((key) -> switch (key) {
+            case "source" -> source.getDisplayName();
+            case "target" -> target.getDisplayName();
+            case "message" -> getPrivateMessageContent(message);
+            default -> null;
+        });
+
+        MutableComponent text = Formatter.parse(config.prefix).append(Formatter.parse(config.privateMessage, placeholderParser));
+        Socialspy.send(target.level().getServer(), text, (player) -> {
+            Mode mode = DataManager.get(player).spyMode;
             return mode.acceptsPrivate() && player != target && player != source.getPlayer();
         });
+
         if (config.logPrivateMessages) {
             AdvancedChat.getLogger().info(text.getString());
         }
@@ -58,18 +59,17 @@ public class Socialspy {
         }
 
         Config.Socialspy config = Config.instance().socialSpy;
-        MutableComponent text = Formatter.parse(config.prefix).append(Placeholders.parseText(
-                Formatter.parseNodes(config.channelMessage),
-                Placeholders.PREDEFINED_PLACEHOLDER_PATTERN,
-                Map.of(
-                        "channel", AdvancedChatAPI.getChannelPrefix(sender),
-                        "sender", sender.getDisplayName(),
-                        "message", message.decoratedContent()
-                )
-        ));
 
-        Socialspy.send(sender.server, text, (player) -> {
-            Socialspy.Mode mode = DataManager.get(player).spyMode;
+        NodeParser placeholderParser = Formatter.placeholderParser((key) -> switch (key) {
+            case "channel" -> AdvancedChatAPI.getChannelPrefix(sender);
+            case "sender" -> sender.getDisplayName();
+            case "message" -> message.decoratedContent();
+            default -> null;
+        });
+
+        MutableComponent text = Formatter.parse(config.prefix).append(Formatter.parse(config.channelMessage, placeholderParser));
+        Socialspy.send(sender.level().getServer(), text, (player) -> {
+            Mode mode = DataManager.get(player).spyMode;
             return mode.acceptsChannel() && channel.canUse(player) && !receivers.contains(player);
         });
     }

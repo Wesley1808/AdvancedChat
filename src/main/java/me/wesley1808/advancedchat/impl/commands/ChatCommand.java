@@ -109,8 +109,8 @@ public class ChatCommand {
             }
 
             MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(player);
-            ChatType.Bound bound = ChatType.bind(ChatType.CHAT, player.server.registryAccess(), prefix.append(player.getDisplayName()));
-            player.server.getPlayerList().broadcastChatMessage(message, player, bound);
+            ChatType.Bound bound = ChatType.bind(ChatType.CHAT, player.level().getServer().registryAccess(), prefix.append(player.getDisplayName()));
+            player.level().getServer().getPlayerList().broadcastChatMessage(message, player, bound);
             data.channel = original;
         });
 

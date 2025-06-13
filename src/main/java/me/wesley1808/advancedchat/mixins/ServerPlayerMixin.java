@@ -43,8 +43,8 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     @Unique
     private long advancedchat$nextPacketTime;
 
-    public ServerPlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
-        super(level, blockPos, f, gameProfile);
+    public ServerPlayerMixin(Level level, GameProfile gameProfile) {
+        super(level, gameProfile);
     }
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))

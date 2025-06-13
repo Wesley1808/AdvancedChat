@@ -1,11 +1,11 @@
 package me.wesley1808.advancedchat.mixins;
 
+import io.netty.channel.ChannelFutureListener;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.network.Connection;
-import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.PlayerChatMessage;
@@ -58,7 +58,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     }
 
     @Override
-    public void send(Packet<?> packet, @Nullable PacketSendListener packetSendListener) {
+    public void send(Packet<?> packet, @Nullable ChannelFutureListener packetSendListener) {
         super.send(packet, packetSendListener);
 
         if (Config.instance().actionbar && this.player instanceof IServerPlayer player) {

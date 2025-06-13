@@ -39,7 +39,7 @@ public class ReplyCommand {
         UUID uuid = IServerPlayer.getReplyTarget(player);
 
         ServerPlayer target;
-        if (uuid == null || (target = player.server.getPlayerList().getPlayer(uuid)) == null) {
+        if (uuid == null || (target = player.level().getServer().getPlayerList().getPlayer(uuid)) == null) {
             throw EntityArgument.NO_PLAYERS_FOUND.create();
         }
 

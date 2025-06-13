@@ -7,8 +7,10 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import eu.pb4.placeholders.api.Placeholders;
+import eu.pb4.placeholders.api.parsers.NodeParser;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.drex.vanish.api.VanishAPI;
+import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
@@ -30,6 +32,7 @@ import net.minecraft.world.entity.Entity;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -53,7 +56,7 @@ public class Util {
             return component;
         }
 
-        List<ServerPlayer> players = sender.server.getPlayerList().getPlayers();
+        List<ServerPlayer> players = sender.level().getServer().getPlayerList().getPlayers();
 
         // Filter out all players that ignore the sender and that cannot view the chat channel.
         List<ServerPlayer> filtered = Util.filterByChannel(sender, Util.filterIgnored(sender, players));
@@ -108,11 +111,13 @@ public class Util {
         if (!mask.isEmpty() && Config.instance().filter.hideFilteredMessages) {
             String content = message.signedContent();
             String censored = mask.apply(content);
-            sender.sendSystemMessage(Placeholders.parseText(
-                    Formatter.parseNodes(Config.instance().messages.cannotSendFiltered),
-                    Placeholders.PREDEFINED_PLACEHOLDER_PATTERN,
-                    Map.of("message", Component.literal(censored != null ? censored : content))
-            ));
+
+            NodeParser placeholderParser = Formatter.placeholderParser((key) -> switch (key) {
+                case "message" -> Component.literal(censored != null ? censored : content);
+                default -> null;
+            });
+
+            sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendFiltered, placeholderParser));
             return true;
         }
 
@@ -183,7 +188,7 @@ public class Util {
                     target.getZ(),
                     config.volume,
                     config.pitch,
-                    target.serverLevel().getRandom().nextLong()
+                    target.level().getRandom().nextLong()
             ));
         }
     }
