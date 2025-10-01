@@ -1,16 +1,13 @@
 package me.wesley1808.advancedchat.impl.utils;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import eu.pb4.placeholders.api.Placeholders;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.drex.vanish.api.VanishAPI;
-import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
@@ -25,14 +22,13 @@ import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -40,8 +36,8 @@ public class Util {
     public static final String TARGET = "target";
     private static final SimpleCommandExceptionType ONE_PLAYER_EXCEPTION = new SimpleCommandExceptionType(Component.literal("You can only select one player!"));
 
-    public static GameProfile getProfile(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        Collection<GameProfile> profiles = GameProfileArgument.getGameProfiles(context, TARGET);
+    public static NameAndId getProfile(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Collection<NameAndId> profiles = GameProfileArgument.getGameProfiles(context, TARGET);
         if (profiles.size() > 1) {
             throw ONE_PLAYER_EXCEPTION.create();
         }

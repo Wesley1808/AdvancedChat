@@ -1,6 +1,5 @@
 package me.wesley1808.advancedchat.impl.utils;
 
-import eu.pb4.placeholders.api.Placeholders;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 import eu.pb4.styledchat.ducks.ExtSignedMessage;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
@@ -16,7 +15,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 public class Socialspy {

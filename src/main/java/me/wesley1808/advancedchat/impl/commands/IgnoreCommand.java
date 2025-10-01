@@ -1,6 +1,5 @@
 package me.wesley1808.advancedchat.impl.commands;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -11,7 +10,8 @@ import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.server.players.NameAndId;
+import net.minecraft.server.players.UserNameToIdResolver;
 
 import java.util.Optional;
 
@@ -36,22 +36,22 @@ public class IgnoreCommand {
         );
     }
 
-    private static int execute(ServerPlayer source, GameProfile target, boolean ignore) {
+    private static int execute(ServerPlayer source, NameAndId target, boolean ignore) {
         Config.Messages messages = Config.instance().messages;
-        if (ignore && source.getUUID().equals(target.getId())) {
+        if (ignore && source.getUUID().equals(target.id())) {
             source.sendSystemMessage(Formatter.parse(messages.cannotIgnoreSelf));
             return 0;
         }
 
         AdvancedChatData data = DataManager.get(source);
         if (ignore) {
-            if (data.ignore(target.getId())) {
+            if (data.ignore(target.id())) {
                 sendMessage(source, messages.ignoredPlayer, target);
             } else {
                 sendMessage(source, messages.alreadyIgnored, target);
             }
         } else {
-            if (data.unignore(target.getId())) {
+            if (data.unignore(target.id())) {
                 sendMessage(source, messages.unignoredPlayer, target);
             } else {
                 sendMessage(source, messages.notAlreadyIgnored, target);
@@ -60,9 +60,9 @@ public class IgnoreCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static void sendMessage(ServerPlayer source, String text, GameProfile target) {
+    private static void sendMessage(ServerPlayer source, String text, NameAndId target) {
         source.sendSystemMessage(Formatter.parse(
-                text.replace("${player}", target.getName())
+                text.replace("${player}", target.name())
         ));
     }
 
@@ -70,11 +70,11 @@ public class IgnoreCommand {
         return (ctx, builder) -> {
             CommandSourceStack source = ctx.getSource();
             AdvancedChatData data = DataManager.get(source.getPlayerOrException());
-            GameProfileCache profileCache = source.getServer().getProfileCache();
+            UserNameToIdResolver nameResolver = source.getServer().services().nameToIdCache();
 
             return Util.suggest(builder, Util.map(data.ignored, (uuid) -> {
-                Optional<GameProfile> profile = profileCache != null ? profileCache.get(uuid) : Optional.empty();
-                return profile.map(GameProfile::getName).orElse(null);
+                Optional<NameAndId> nameAndId = nameResolver.get(uuid);
+                return nameAndId.map(NameAndId::name).orElse(null);
             }));
         };
     }

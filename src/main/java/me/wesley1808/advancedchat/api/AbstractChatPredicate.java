@@ -26,7 +26,7 @@ public abstract class AbstractChatPredicate extends AbstractPredicate {
         GameProfile profile = context.gameProfile();
         ServerPlayer target = context.player();
         ServerPlayer sender;
-        if (target == null || profile == null || (sender = context.server().getPlayerList().getPlayer(profile.getId())) == null) {
+        if (target == null || profile == null || (sender = context.server().getPlayerList().getPlayer(profile.id())) == null) {
             return PredicateResult.ofFailure();
         }
 

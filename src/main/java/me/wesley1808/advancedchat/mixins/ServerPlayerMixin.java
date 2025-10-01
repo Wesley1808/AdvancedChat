@@ -5,7 +5,6 @@ import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.MinecraftServer;
@@ -59,7 +58,7 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
                     target = "Lnet/minecraft/world/entity/Entity;positionRider(Lnet/minecraft/world/entity/Entity;)V"
             )
     )
-    public void advancedchat$onStartRiding(Entity entity, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+    public void advancedchat$onStartRiding(Entity entity, boolean bl, boolean bl2, CallbackInfoReturnable<Boolean> cir) {
         // Prevents the channel overlay packets from overriding the vehicle mount overlay.
         this.advancedchat$delayNextPacket();
     }
