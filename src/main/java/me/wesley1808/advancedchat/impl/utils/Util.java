@@ -22,6 +22,7 @@ import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.server.players.NameAndId;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -137,8 +138,8 @@ public class Util {
     }
 
     public static List<ServerPlayer> filterIgnored(ServerPlayer sender, List<ServerPlayer> players) {
-        final boolean bypassesIgnore = Permission.check(sender, Permission.BYPASS_IGNORE, 2);
-        final boolean bypassesMute = Permission.check(sender, Permission.BYPASS_CHANNEL_MUTE, 2);
+        final boolean bypassesIgnore = Permission.check(sender, Permission.BYPASS_IGNORE, PermissionLevel.GAMEMASTERS);
+        final boolean bypassesMute = Permission.check(sender, Permission.BYPASS_CHANNEL_MUTE, PermissionLevel.GAMEMASTERS);
 
         ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
         ChatChannel channel = DataManager.get(sender).channel;
@@ -163,7 +164,7 @@ public class Util {
 
     public static void throwIfIgnored(CommandSourceStack source, Collection<ServerPlayer> targets) throws CommandSyntaxException {
         ServerPlayer sender = source.getPlayer();
-        if (sender != null && !Permission.check(source, Permission.BYPASS_IGNORE, 2)) {
+        if (sender != null && !Permission.check(source, Permission.BYPASS_IGNORE, PermissionLevel.GAMEMASTERS)) {
             for (ServerPlayer target : targets) {
                 AdvancedChatData data = DataManager.get(target);
                 if (data.ignored.contains(sender.getUUID())) {

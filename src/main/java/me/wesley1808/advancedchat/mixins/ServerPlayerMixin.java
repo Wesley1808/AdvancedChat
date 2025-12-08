@@ -5,6 +5,8 @@ import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.MinecraftServer;
@@ -123,6 +125,9 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
             return;
         }
 
-        this.advancedchat$actionBarPacket = new ClientboundSetActionBarTextPacket(data.channel.getActionBarText(player));
+        Component component = data.channel.getActionBarText(player);
+        if (component != null) {
+            this.advancedchat$actionBarPacket = new ClientboundSetActionBarTextPacket(component);
+        }
     }
 }

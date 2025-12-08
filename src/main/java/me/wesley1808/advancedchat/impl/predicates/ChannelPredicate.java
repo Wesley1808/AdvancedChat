@@ -10,13 +10,13 @@ import me.wesley1808.advancedchat.impl.channels.Channels;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 public class ChannelPredicate extends AbstractPredicate {
     private static final String GLOBAL_CHANNEL = "global";
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("advancedchat", "channel");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("advancedchat", "channel");
     public static final MapCodec<ChannelPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(Codec.STRING.fieldOf("channel").forGetter(ChannelPredicate::channel))
             .apply(instance, ChannelPredicate::new)

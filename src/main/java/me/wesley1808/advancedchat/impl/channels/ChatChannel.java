@@ -10,6 +10,7 @@ import me.wesley1808.advancedchat.impl.utils.Permission;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
 import org.jetbrains.annotations.Nullable;
 
 public class ChatChannel {
@@ -61,7 +62,7 @@ public class ChatChannel {
     }
 
     private boolean hasPermission(ServerPlayer player) {
-        return this.permission == null || Permission.check(player, this.permission, 2);
+        return this.permission == null || Permission.check(player, this.permission, PermissionLevel.GAMEMASTERS);
     }
 
     @Nullable

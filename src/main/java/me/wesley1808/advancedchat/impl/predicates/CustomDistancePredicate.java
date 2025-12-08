@@ -4,13 +4,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.predicate.api.PredicateResult;
 import me.wesley1808.advancedchat.api.AbstractChatPredicate;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.advancements.criterion.DistancePredicate;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 
 public class CustomDistancePredicate extends AbstractChatPredicate {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("advancedchat", "distance");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("advancedchat", "distance");
     public static final MapCodec<CustomDistancePredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
             .group(DistancePredicate.CODEC.fieldOf("value").forGetter((inst) -> inst.predicate))
             .apply(instance, CustomDistancePredicate::new)

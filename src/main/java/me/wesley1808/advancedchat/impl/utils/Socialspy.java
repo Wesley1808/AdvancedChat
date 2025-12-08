@@ -1,7 +1,7 @@
 package me.wesley1808.advancedchat.impl.utils;
 
 import eu.pb4.placeholders.api.parsers.NodeParser;
-import eu.pb4.styledchat.ducks.ExtSignedMessage;
+import eu.pb4.styledchat.ducks.ExtPlayerChatMessage;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
 import me.wesley1808.advancedchat.impl.AdvancedChat;
 import me.wesley1808.advancedchat.impl.channels.ChatChannel;
@@ -13,6 +13,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -43,7 +44,7 @@ public class Socialspy {
 
     private static Component getPrivateMessageContent(PlayerChatMessage message) {
         if (ModCompat.STYLEDCHAT) {
-            return ExtSignedMessage.getArg(message, "base_input");
+            return ExtPlayerChatMessage.getArg(message, "base_input");
         } else {
             return message.decoratedContent();
         }
@@ -74,7 +75,7 @@ public class Socialspy {
 
     private static void send(MinecraftServer server, Component message, Predicate<ServerPlayer> predicate) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (Permission.check(player, Permission.SOCIALSPY, 2) && predicate.test(player)) {
+            if (Permission.check(player, Permission.SOCIALSPY, PermissionLevel.GAMEMASTERS) && predicate.test(player)) {
                 player.sendSystemMessage(message);
             }
         }

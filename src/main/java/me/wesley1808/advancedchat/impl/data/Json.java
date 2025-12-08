@@ -8,7 +8,7 @@ import me.wesley1808.advancedchat.impl.channels.ChatChannel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
 import java.lang.reflect.Type;
@@ -65,7 +65,7 @@ public class Json {
 
         public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if (json.isJsonPrimitive()) {
-                ResourceLocation location = ResourceLocation.tryParse(json.getAsString());
+                Identifier location = Identifier.tryParse(json.getAsString());
                 if (location != null) {
                     return this.registry.getValue(location);
                 }
@@ -74,7 +74,7 @@ public class Json {
         }
 
         public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
-            ResourceLocation location = this.registry.getKey(src);
+            Identifier location = this.registry.getKey(src);
             return new JsonPrimitive(location != null ? location.toString() : "");
         }
     }

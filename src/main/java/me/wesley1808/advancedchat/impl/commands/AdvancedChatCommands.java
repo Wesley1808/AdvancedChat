@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
 
 import static net.minecraft.commands.Commands.literal;
 
@@ -24,12 +25,12 @@ public class AdvancedChatCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("advancedchat");
         builder.then(literal("reload")
-                .requires(Permission.require(Permission.RELOAD, 2))
+                .requires(Permission.require(Permission.RELOAD, PermissionLevel.GAMEMASTERS))
                 .executes(ctx -> reload(ctx.getSource()))
         );
 
         builder.then(literal("save")
-                .requires(Permission.require(Permission.RELOAD, 2))
+                .requires(Permission.require(Permission.RELOAD, PermissionLevel.GAMEMASTERS))
                 .executes(ctx -> save(ctx.getSource()))
         );
 

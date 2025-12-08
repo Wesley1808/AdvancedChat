@@ -8,13 +8,13 @@ import eu.pb4.predicate.api.PredicateResult;
 import eu.pb4.predicate.impl.predicates.GenericObject;
 import me.wesley1808.advancedchat.api.AbstractChatPredicate;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
 
 public class PlayerComparePredicate extends AbstractChatPredicate {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("advancedchat", "compare");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("advancedchat", "compare");
     public static final MapCodec<PlayerComparePredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             GenericObject.CODEC.fieldOf("compare_predicate").forGetter((x) -> x.predicateObj)
     ).apply(instance, PlayerComparePredicate::new));
