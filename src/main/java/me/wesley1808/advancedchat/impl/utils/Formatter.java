@@ -15,15 +15,15 @@ import java.util.function.Function;
 public class Formatter {
     private static final NodeParser BASE_PARSER = baseParser().build();
 
-    public static MutableComponent parse(String text, NodeParser parser) {
-        return (MutableComponent) parser.parseText(text, ParserContext.of());
+    public static Component parse(String text, NodeParser parser) {
+        return parser.parseComponent(text, ParserContext.of());
     }
 
     public static ParentTextNode parseNodes(String text, NodeParser parser) {
         return new ParentNode(parser.parseNodes(new LiteralNode(text)));
     }
 
-    public static MutableComponent parse(String text) {
+    public static Component parse(String text) {
         return parse(text, BASE_PARSER);
     }
 

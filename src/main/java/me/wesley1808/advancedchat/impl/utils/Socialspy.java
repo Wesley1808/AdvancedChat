@@ -31,7 +31,8 @@ public class Socialspy {
             default -> null;
         });
 
-        MutableComponent text = Formatter.parse(config.prefix).append(Formatter.parse(config.privateMessage, placeholderParser));
+        MutableComponent text = Component.empty();
+        text.append(Formatter.parse(config.prefix)).append(Formatter.parse(config.privateMessage, placeholderParser));
         Socialspy.send(target.level().getServer(), text, (player) -> {
             Mode mode = DataManager.get(player).spyMode;
             return mode.acceptsPrivate() && player != target && player != source.getPlayer();
@@ -66,7 +67,8 @@ public class Socialspy {
             default -> null;
         });
 
-        MutableComponent text = Formatter.parse(config.prefix).append(Formatter.parse(config.channelMessage, placeholderParser));
+        MutableComponent text = Component.empty();
+        text.append(Formatter.parse(config.prefix)).append(Formatter.parse(config.channelMessage, placeholderParser));
         Socialspy.send(sender.level().getServer(), text, (player) -> {
             Mode mode = DataManager.get(player).spyMode;
             return mode.acceptsChannel() && channel.canUse(player) && !receivers.contains(player);

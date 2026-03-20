@@ -23,13 +23,13 @@ import java.util.Collection;
 public class MsgCommandMixin {
 
     @Inject(
-            method = "method_13463",
+            method = "lambda$register$0",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/commands/arguments/MessageArgument;resolveChatMessage(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Ljava/util/function/Consumer;)V"
             )
     )
-    private static void advancedchat$verifyNotIgnored(CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir, @Local(ordinal = 0) Collection<ServerPlayer> targets) throws CommandSyntaxException {
+    private static void advancedchat$verifyNotIgnored(CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir, @Local(name = "players") Collection<ServerPlayer> targets) throws CommandSyntaxException {
         Util.throwIfIgnored(context.getSource(), targets);
     }
 
@@ -50,7 +50,7 @@ public class MsgCommandMixin {
     )
     private static void advancedchat$onSendMessage(
             CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci,
-            @Local(ordinal = 0) ServerPlayer target
+            @Local(name = "player") ServerPlayer target
     ) {
         ServerPlayer sender = source.getPlayer();
         if (sender != null) {
