@@ -1,11 +1,13 @@
 package me.wesley1808.advancedchat.api;
 
+import com.google.common.base.Suppliers;
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.MapCodec;
 import eu.pb4.predicate.api.AbstractPredicate;
 import eu.pb4.predicate.api.MinecraftPredicate;
 import eu.pb4.predicate.api.PredicateContext;
 import eu.pb4.predicate.api.PredicateResult;
+import eu.pb4.predicate.impl.PredicateContextImpl;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -18,7 +20,7 @@ public abstract class AbstractChatPredicate extends AbstractPredicate {
     public static PredicateContext createContext(ServerPlayer sender, ServerPlayer target) {
         // Stores the sender in the game profile, as it isn't really used anywhere else.
         // For everything else we want to be testing against the target.
-        return new PredicateContext(target.level().getServer(), target.createCommandSourceStack(), target.level(), target, target, sender.getGameProfile());
+        return new PredicateContextImpl(target.level().getServer(), Suppliers.memoize(target::createCommandSourceStack), target.level(), target, target, sender.getGameProfile());
     }
 
     @Override
