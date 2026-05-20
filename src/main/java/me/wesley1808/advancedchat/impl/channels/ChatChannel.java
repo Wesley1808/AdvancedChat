@@ -63,7 +63,7 @@ public class ChatChannel {
     }
 
     private boolean hasPermission(ServerPlayer player) {
-        return this.permission == null || Permission.check(player, this.permission, PermissionLevel.GAMEMASTERS);
+        return this.permission == null || Permission.checkExternal(player, this.permission, PermissionLevel.GAMEMASTERS);
     }
 
     @Nullable

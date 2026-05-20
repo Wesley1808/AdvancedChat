@@ -18,13 +18,7 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API
-    Set<String> modules = ['fabric-api-base', 'fabric-command-api-v2', 'fabric-lifecycle-events-v1', 'fabric-message-api-v1']
-    modules.forEach {
-        implementation(include(fabricApi.module(it, project.fabric_version)))
-    }
-
-    // Permissions API
-    implementation(include("me.lucko:fabric-permissions-api:${project.permission_api_version}"))
+    implementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
     // Placeholder API
     implementation(include("eu.pb4:placeholder-api:${project.placeholder_api_version}"))
