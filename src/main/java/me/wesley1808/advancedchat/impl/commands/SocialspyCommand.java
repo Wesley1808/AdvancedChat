@@ -5,8 +5,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.DataManager;
+import me.wesley1808.advancedchat.impl.utils.AcPerms;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
-import me.wesley1808.advancedchat.impl.utils.Permission;
 import me.wesley1808.advancedchat.impl.utils.Socialspy;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,7 +18,7 @@ import static net.minecraft.commands.Commands.literal;
 public class SocialspyCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = literal("socialspy").requires(Permission.require(Permission.SOCIALSPY, PermissionLevel.GAMEMASTERS));
+        LiteralArgumentBuilder<CommandSourceStack> builder = literal("socialspy").requires(AcPerms.require(AcPerms.SOCIALSPY, PermissionLevel.GAMEMASTERS));
 
         for (Socialspy.Mode mode : Socialspy.Mode.values()) {
             String name = mode.name().toLowerCase();

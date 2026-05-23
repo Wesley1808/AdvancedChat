@@ -77,7 +77,7 @@ public class Socialspy {
 
     private static void send(MinecraftServer server, Component message, Predicate<ServerPlayer> predicate) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (Permission.check(player, Permission.SOCIALSPY, PermissionLevel.GAMEMASTERS) && predicate.test(player)) {
+            if (AcPerms.check(player, AcPerms.SOCIALSPY, PermissionLevel.GAMEMASTERS) && predicate.test(player)) {
                 player.sendSystemMessage(message);
             }
         }

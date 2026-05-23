@@ -15,7 +15,7 @@ public class AntiSpam {
 
         if (lastMessage != null && config.enabled) {
             // Check for similar messages
-            if (config.blockSimilarMessages && !Permission.check(sender, Permission.BYPASS_ANTISPAM_SIMILARITY, PermissionLevel.GAMEMASTERS)) {
+            if (config.blockSimilarMessages && !AcPerms.check(sender, AcPerms.BYPASS_ANTISPAM_SIMILARITY, PermissionLevel.GAMEMASTERS)) {
                 int similarity = AntiSpam.getSimilarity(lastMessage.signedContent(), message.signedContent(), config.similarityMinLength);
                 if (similarity >= config.similarityThreshold) {
                     sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendSimilar));
@@ -24,7 +24,7 @@ public class AntiSpam {
             }
 
             // Check for the message cooldown
-            if (message.timeStamp().isBefore(lastMessage.timeStamp().plusMillis(config.messageCooldown)) && !Permission.check(sender, Permission.BYPASS_ANTISPAM_COOLDOWN, PermissionLevel.GAMEMASTERS)) {
+            if (message.timeStamp().isBefore(lastMessage.timeStamp().plusMillis(config.messageCooldown)) && !AcPerms.check(sender, AcPerms.BYPASS_ANTISPAM_COOLDOWN, PermissionLevel.GAMEMASTERS)) {
                 sender.sendSystemMessage(Formatter.parse(Config.instance().messages.cannotSendSpam));
                 return true;
             }

@@ -138,8 +138,8 @@ public class Util {
     }
 
     public static List<ServerPlayer> filterIgnored(ServerPlayer sender, List<ServerPlayer> players) {
-        final boolean bypassesIgnore = Permission.check(sender, Permission.BYPASS_IGNORE, PermissionLevel.GAMEMASTERS);
-        final boolean bypassesMute = Permission.check(sender, Permission.BYPASS_CHANNEL_MUTE, PermissionLevel.GAMEMASTERS);
+        final boolean bypassesIgnore = AcPerms.check(sender, AcPerms.BYPASS_IGNORE, PermissionLevel.GAMEMASTERS);
+        final boolean bypassesMute = AcPerms.check(sender, AcPerms.BYPASS_CHANNEL_MUTE, PermissionLevel.GAMEMASTERS);
 
         ObjectArrayList<ServerPlayer> filtered = new ObjectArrayList<>();
         ChatChannel channel = DataManager.get(sender).channel;
@@ -164,7 +164,7 @@ public class Util {
 
     public static void throwIfIgnored(CommandSourceStack source, Collection<ServerPlayer> targets) throws CommandSyntaxException {
         ServerPlayer sender = source.getPlayer();
-        if (sender != null && !Permission.check(source, Permission.BYPASS_IGNORE, PermissionLevel.GAMEMASTERS)) {
+        if (sender != null && !AcPerms.check(source, AcPerms.BYPASS_IGNORE, PermissionLevel.GAMEMASTERS)) {
             for (ServerPlayer target : targets) {
                 AdvancedChatData data = DataManager.get(target);
                 if (data.ignored.contains(sender.getUUID())) {

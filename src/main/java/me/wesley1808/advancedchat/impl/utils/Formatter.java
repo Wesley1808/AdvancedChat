@@ -8,7 +8,6 @@ import eu.pb4.placeholders.api.parsers.NodeParser;
 import eu.pb4.placeholders.api.parsers.ParserBuilder;
 import eu.pb4.placeholders.api.parsers.TagLikeParser;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 import java.util.function.Function;
 

@@ -6,8 +6,8 @@ import eu.pb4.placeholders.api.ServerPlaceholderContext;
 import eu.pb4.predicate.api.MinecraftPredicate;
 import eu.pb4.predicate.api.PredicateContext;
 import me.wesley1808.advancedchat.api.AbstractChatPredicate;
+import me.wesley1808.advancedchat.impl.utils.AcPerms;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
-import me.wesley1808.advancedchat.impl.utils.Permission;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,7 +63,7 @@ public class ChatChannel {
     }
 
     private boolean hasPermission(ServerPlayer player) {
-        return this.permission == null || Permission.checkExternal(player, this.permission, PermissionLevel.GAMEMASTERS);
+        return this.permission == null || AcPerms.checkExternal(player, this.permission, PermissionLevel.GAMEMASTERS);
     }
 
     @Nullable

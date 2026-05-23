@@ -9,7 +9,7 @@ import me.wesley1808.advancedchat.impl.config.ConfigManager;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.interfaces.IServerPlayer;
-import me.wesley1808.advancedchat.impl.utils.Permission;
+import me.wesley1808.advancedchat.impl.utils.AcPerms;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -25,12 +25,12 @@ public class AdvancedChatCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> builder = literal("advancedchat");
         builder.then(literal("reload")
-                .requires(Permission.require(Permission.RELOAD, PermissionLevel.GAMEMASTERS))
+                .requires(AcPerms.require(AcPerms.RELOAD, PermissionLevel.GAMEMASTERS))
                 .executes(ctx -> reload(ctx.getSource()))
         );
 
         builder.then(literal("save")
-                .requires(Permission.require(Permission.RELOAD, PermissionLevel.GAMEMASTERS))
+                .requires(AcPerms.require(AcPerms.RELOAD, PermissionLevel.GAMEMASTERS))
                 .executes(ctx -> save(ctx.getSource()))
         );
 
