@@ -38,8 +38,8 @@ public class ServerPlayerMixin {
         return textFilteringEnabled || Config.instance().filter.forceTextFiltering;
     }
 
-    @ModifyVariable(method = "sendChatMessage", index = 2, argsOnly = true, at = @At("HEAD"))
-    private boolean advancedchat$forceChatFiltering(boolean shouldFilter) {
-        return shouldFilter || Config.instance().filter.forceTextFiltering;
+    @ModifyVariable(method = "sendChatMessage", argsOnly = true, name = "filtered", at = @At("HEAD"))
+    private boolean advancedchat$forceChatFiltering(boolean filtered) {
+        return filtered || Config.instance().filter.forceTextFiltering;
     }
 }

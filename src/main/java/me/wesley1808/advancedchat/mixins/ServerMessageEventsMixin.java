@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerMessageEventsMixin {
 
     @Inject(method = "lambda$static$7", at = @At(value = "HEAD"), require = 0, cancellable = true)
-    private static void advancedchat$cancelEvent(ServerMessageEvents.ChatMessage[] handlers, PlayerChatMessage message, ServerPlayer sender, ChatType.Bound bound, CallbackInfo ci) {
+    private static void advancedchat$cancelEvent(ServerMessageEvents.ChatMessage[] handlers, PlayerChatMessage message, ServerPlayer sender, ChatType.Bound boundChatType, CallbackInfo ci) {
         // Cancels the ServerMessageEvents.CHAT_MESSAGE event if the message was sent through a chat channel.
         // This way mods listening for this event won't trigger, as they would expect these messages to be public - even if they aren't.
         if (!Config.instance().alwaysTriggerMessageEvent && !AdvancedChatAPI.isPublicChat(sender)) {

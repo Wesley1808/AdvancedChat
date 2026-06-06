@@ -21,8 +21,8 @@ import java.util.function.Predicate;
 public class PlayerListMixin {
 
     @Inject(method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V", at = @At("HEAD"), cancellable = true)
-    private void advancedchat$hideChatMessage(PlayerChatMessage message, Predicate<ServerPlayer> predicate, ServerPlayer sender, ChatType.Bound bound, CallbackInfo ci) {
-        if (sender != null && Util.shouldHideMessage(sender, message)) {
+    private void advancedchat$hideChatMessage(PlayerChatMessage message, Predicate<ServerPlayer> isFiltered, ServerPlayer senderPlayer, ChatType.Bound chatType, CallbackInfo ci) {
+        if (senderPlayer != null && Util.shouldHideMessage(senderPlayer, message)) {
             ci.cancel();
         }
     }
@@ -35,12 +35,12 @@ public class PlayerListMixin {
                     opcode = Opcodes.GETFIELD
             )
     )
-    private List<ServerPlayer> advancedchat$filterPlayers(List<ServerPlayer> original, PlayerChatMessage message, Predicate<ServerPlayer> predicate, @Nullable ServerPlayer sender, ChatType.Bound bound) {
-        List<ServerPlayer> players = sender != null ? Util.filterIgnored(sender, original) : original;
+    private List<ServerPlayer> advancedchat$filterPlayers(List<ServerPlayer> original, PlayerChatMessage message, Predicate<ServerPlayer> isFiltered, @Nullable ServerPlayer senderPlayer, ChatType.Bound chatType) {
+        List<ServerPlayer> players = senderPlayer != null ? Util.filterIgnored(senderPlayer, original) : original;
 
-        if (sender != null && !players.isEmpty() && bound.chatType().is(ChatType.CHAT.identifier())) {
-            List<ServerPlayer> receivers = Util.filterByChannel(sender, players);
-            Socialspy.send(sender, receivers, message);
+        if (senderPlayer != null && !players.isEmpty() && chatType.chatType().is(ChatType.CHAT.identifier())) {
+            List<ServerPlayer> receivers = Util.filterByChannel(senderPlayer, players);
+            Socialspy.send(senderPlayer, receivers, message);
             return receivers;
         }
 

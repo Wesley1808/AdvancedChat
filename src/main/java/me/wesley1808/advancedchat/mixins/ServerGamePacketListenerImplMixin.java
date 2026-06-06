@@ -35,7 +35,7 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
     }
 
     @Inject(method = "sendPlayerChatMessage", at = @At("HEAD"))
-    private void advancedchat$onChatMessage(PlayerChatMessage message, ChatType.Bound bound, CallbackInfo ci) {
+    private void advancedchat$onChatMessage(PlayerChatMessage message, ChatType.Bound chatType, CallbackInfo ci) {
         String playerName = this.player.getScoreboardName();
         String content = message.signedContent();
         int index = content.indexOf(playerName);
@@ -52,9 +52,9 @@ public abstract class ServerGamePacketListenerImplMixin extends ServerCommonPack
                     target = "Lnet/minecraft/network/chat/ChatType;bind(Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/network/chat/ChatType$Bound;"
             )
     )
-    private ChatType.Bound advancedchat$addChannelPrefix(ResourceKey<ChatType> key, Entity entity) {
+    private ChatType.Bound advancedchat$addChannelPrefix(ResourceKey<ChatType> chatType, Entity entity) {
         MutableComponent prefix = (MutableComponent) AdvancedChatAPI.getChannelPrefix(this.player);
-        return ChatType.bind(key, entity.level().registryAccess(), prefix.append(entity.getDisplayName()));
+        return ChatType.bind(chatType, entity.level().registryAccess(), prefix.append(entity.getDisplayName()));
     }
 
     @Override

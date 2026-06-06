@@ -29,12 +29,15 @@ public class MsgCommandMixin {
                     target = "Lnet/minecraft/commands/arguments/MessageArgument;resolveChatMessage(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Ljava/util/function/Consumer;)V"
             )
     )
-    private static void advancedchat$verifyNotIgnored(CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir, @Local(name = "players") Collection<ServerPlayer> targets) throws CommandSyntaxException {
-        Util.throwIfIgnored(context.getSource(), targets);
+    private static void advancedchat$verifyNotIgnored(
+            CommandContext<CommandSourceStack> c, CallbackInfoReturnable<Integer> cir,
+            @Local(name = "players") Collection<ServerPlayer> players
+    ) throws CommandSyntaxException {
+        Util.throwIfIgnored(c.getSource(), players);
     }
 
     @Inject(method = "sendMessage", at = @At("HEAD"), cancellable = true)
-    private static void advancedchat$hideChatMessage(CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci) {
+    private static void advancedchat$hideChatMessage(CommandSourceStack source, Collection<ServerPlayer> players, PlayerChatMessage message, CallbackInfo ci) {
         ServerPlayer sender = source.getPlayer();
         if (sender != null && Util.shouldHideMessage(sender, message)) {
             ci.cancel();
@@ -49,15 +52,15 @@ public class MsgCommandMixin {
             )
     )
     private static void advancedchat$onSendMessage(
-            CommandSourceStack source, Collection<ServerPlayer> collection, PlayerChatMessage message, CallbackInfo ci,
-            @Local(name = "player") ServerPlayer target
+            CommandSourceStack source, Collection<ServerPlayer> players, PlayerChatMessage message, CallbackInfo ci,
+            @Local(name = "player") ServerPlayer player
     ) {
         ServerPlayer sender = source.getPlayer();
         if (sender != null) {
-            Util.playSound(target, Config.instance().privateMessageSound);
-            Socialspy.send(source, target, message);
-            IServerPlayer.setReplyTarget(sender, target.getUUID());
-            IServerPlayer.setReplyTarget(target, sender.getUUID());
+            Util.playSound(player, Config.instance().privateMessageSound);
+            Socialspy.send(source, player, message);
+            IServerPlayer.setReplyTarget(sender, player.getUUID());
+            IServerPlayer.setReplyTarget(player, sender.getUUID());
         }
     }
 }

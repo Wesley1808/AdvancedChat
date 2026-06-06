@@ -48,7 +48,7 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
     }
 
     @Inject(method = "<init>", at = @At(value = "TAIL"))
-    private void advancedchat$onInit(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
+    private void advancedchat$onInit(MinecraftServer server, ServerLevel level, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
         this.advancedchat$updateActionBarPacket();
     }
 
@@ -59,7 +59,7 @@ public abstract class ServerPlayerMixin extends Player implements IServerPlayer 
                     target = "Lnet/minecraft/world/entity/Entity;positionRider(Lnet/minecraft/world/entity/Entity;)V"
             )
     )
-    public void advancedchat$onStartRiding(Entity entity, boolean bl, boolean bl2, CallbackInfoReturnable<Boolean> cir) {
+    public void advancedchat$onStartRiding(Entity entityToRide, boolean force, boolean sendEventAndTriggers, CallbackInfoReturnable<Boolean> cir) {
         // Prevents the channel overlay packets from overriding the vehicle mount overlay.
         this.advancedchat$delayNextPacket();
     }
