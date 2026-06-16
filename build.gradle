@@ -1,5 +1,6 @@
 plugins {
     id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
+    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
     id 'maven-publish'
 }
 
@@ -90,4 +91,31 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+publishMods {
+    type = STABLE
+    file = jar.archiveFile
+    changelog = ''
+    modLoaders.add("fabric")
+
+    def customDisplayName = "Advanced Chat ${version.get()}"
+    def curseForgeToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+    def modrinthToken = providers.environmentVariable("MODRINTH_TOKEN")
+
+    curseforge("CurseForge") {
+        accessToken = curseForgeToken
+        minecraftVersions.add(project.minecraft_version)
+        projectId = "868350"
+        displayName = customDisplayName
+    }
+
+    modrinth("Modrinth") {
+        accessToken = modrinthToken
+        minecraftVersions.add(project.minecraft_version)
+        projectId = "OnDQctNr"
+        displayName = customDisplayName
+    }
+
+    dryRun = curseForgeToken.getOrNull() == null || modrinthToken.getOrNull() == null
 }
