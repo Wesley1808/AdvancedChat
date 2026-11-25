@@ -3,12 +3,14 @@ package me.wesley1808.advancedchat.impl.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.suggestion.Suggestions;
 import me.wesley1808.advancedchat.impl.config.Config;
 import me.wesley1808.advancedchat.impl.data.AdvancedChatData;
 import me.wesley1808.advancedchat.impl.data.DataManager;
 import me.wesley1808.advancedchat.impl.utils.Formatter;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.suggestions.SuggestionProviders;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.NameAndId;
 import net.minecraft.server.players.UserNameToIdResolver;
@@ -67,15 +69,23 @@ public class IgnoreCommand {
     }
 
     private static SuggestionProvider<CommandSourceStack> ignoredPlayers() {
-        return (ctx, builder) -> {
-            CommandSourceStack source = ctx.getSource();
-            AdvancedChatData data = DataManager.get(source.getPlayerOrException());
-            UserNameToIdResolver nameResolver = source.getServer().services().nameToIdCache();
+        return SuggestionProviders.serverOnly((server, ctx, builder) -> {
+            if (!(ctx.getSource() instanceof CommandSourceStack source)) {
+                return Suggestions.empty();
+            }
+
+            ServerPlayer player = source.getPlayer();
+            if (player == null) {
+                return Suggestions.empty();
+            }
+
+            AdvancedChatData data = DataManager.get(player);
+            UserNameToIdResolver nameResolver = server.services().nameToIdCache();
 
             return Util.suggest(builder, Util.map(data.ignored, (uuid) -> {
                 Optional<NameAndId> nameAndId = nameResolver.get(uuid);
                 return nameAndId.map(NameAndId::name).orElse(null);
             }));
-        };
+        });
     }
 }

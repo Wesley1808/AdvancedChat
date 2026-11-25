@@ -6,6 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.suggestion.Suggestions;
 import eu.pb4.styledchat.StyledChatUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import me.wesley1808.advancedchat.api.AdvancedChatAPI;
@@ -20,6 +21,7 @@ import me.wesley1808.advancedchat.impl.utils.ModCompat;
 import me.wesley1808.advancedchat.impl.utils.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.MessageArgument;
+import net.minecraft.commands.suggestions.SuggestionProviders;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,11 +29,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-import static com.mojang.brigadier.arguments.StringArgumentType.getString;
-import static com.mojang.brigadier.arguments.StringArgumentType.word;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.arguments.MessageArgument.message;
+import static net.minecraft.commands.arguments.StringArgument.getString;
+import static net.minecraft.commands.arguments.StringArgument.word;
 
 public class ChatCommand {
     private static final String MESSAGE_KEY = "message";
@@ -118,15 +120,18 @@ public class ChatCommand {
     }
 
     private static SuggestionProvider<CommandSourceStack> availableChannels() {
-        return (ctx, builder) -> {
+        return SuggestionProviders.serverOnly((server, ctx, builder) -> {
+            if (!(ctx.getSource() instanceof CommandSourceStack source)) {
+                return Suggestions.empty();
+            }
+
             List<String> channels = new ObjectArrayList<>();
             Channels.getAll().forEach((name, channel) -> {
-                if (channel.canUse(ctx.getSource())) {
+                if (channel.canUse(source)) {
                     channels.add(name);
                 }
             });
-
             return Util.suggest(builder, channels);
-        };
+        });
     }
 }
