@@ -14,6 +14,7 @@ import net.minecraft.commands.suggestions.SuggestionProviders;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.NameAndId;
 import net.minecraft.server.players.UserNameToIdResolver;
+import net.minecraft.world.entity.Entity;
 
 import java.util.Optional;
 
@@ -70,12 +71,8 @@ public class IgnoreCommand {
 
     private static SuggestionProvider<CommandSourceStack> ignoredPlayers() {
         return SuggestionProviders.serverOnly((server, ctx, builder) -> {
-            if (!(ctx.getSource() instanceof CommandSourceStack source)) {
-                return Suggestions.empty();
-            }
-
-            ServerPlayer player = source.getPlayer();
-            if (player == null) {
+            Entity entity = ctx.getSource().entity();
+            if (!(entity instanceof ServerPlayer player)) {
                 return Suggestions.empty();
             }
 

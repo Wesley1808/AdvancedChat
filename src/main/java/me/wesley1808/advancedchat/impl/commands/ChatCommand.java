@@ -25,6 +25,7 @@ import net.minecraft.commands.suggestions.SuggestionProviders;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -121,13 +122,14 @@ public class ChatCommand {
 
     private static SuggestionProvider<CommandSourceStack> availableChannels() {
         return SuggestionProviders.serverOnly((server, ctx, builder) -> {
-            if (!(ctx.getSource() instanceof CommandSourceStack source)) {
+            Entity entity = ctx.getSource().entity();
+            if (!(entity instanceof ServerPlayer player)) {
                 return Suggestions.empty();
             }
 
             List<String> channels = new ObjectArrayList<>();
             Channels.getAll().forEach((name, channel) -> {
-                if (channel.canUse(source)) {
+                if (channel.canUse(player)) {
                     channels.add(name);
                 }
             });
